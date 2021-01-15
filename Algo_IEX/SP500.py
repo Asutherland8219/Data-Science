@@ -29,27 +29,34 @@ my_columns = ['Ticker', 'Company Name','Stock Price', 'Market Capitalization', '
 
 
 final_dataframe = pd.DataFrame(columns = my_columns)
-for stock in stocks['Ticker']:
-    api_url = f'https://sandbox.iexapis.com/stable/stock/{stock}/quote?token={IEX_CLOUD_API_TOKEN}'
-    data = requests.get(api_url).json()
-    final_dataframe.append(
-    pd.Series(
-        [
-            symbol,
-            price,
-            market_cap,
-            name,
-            peratio,
-            per_change,
-            volume,
-            price_high,
-            price_low,
-            shares_buy
-        ],
-    index= my_columns   
-    ),
-    ignore_index=True
-    )
+
+
+def chunks(lst, n):
+    for i in range (0, len(lst), n):
+        yield lst[i:i + n]
+
+symbol_groups = list(chunks(stocks['Ticker'], 100))
+symbol_strings = []
+
+for i in range(0, len(symbol_groups)):
+    symbol_strings.append(','.join(symbol_groups[i]))
+
+for symbol_string in symbol_strings:
+    batch_api_call_url = f'https://sandbox.iexapis.com/stable/stock/market/batch?symbols={symbol_string}&types=&token={IEX_CLOUD_API_TOKEN}'
+data = requests.get(batch_api_call_url).json()
+for symbol in symbol_string.split(','):
+
+    final_dataframe = final_dataframe.append(
+        pd.Series([symbol, 
+        data[symbol]['quote']['latestPrice'], 
+        data[symbol]['quote']['marketCap'], 
+        'N/A'], 
+        index = my_columns), 
+        ignore_index = True)
+
+
+final_dataframe = pd.DataFrame(columns = my_columns)
+
 
 
 
