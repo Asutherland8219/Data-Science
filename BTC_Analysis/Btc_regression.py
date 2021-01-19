@@ -12,5 +12,10 @@ final_df = dataframe.append(btc, ignore_index = True)
 
 final_df["Day_percent_change"] = ( final_df["Close"] - final_df["Open"] ) / final_df["Open"]
 
+final_df["Day_percent_change_in_percent"] = (final_df["Day_percent_change"] * 100)
+
 print(final_df)
+
+
+
 
