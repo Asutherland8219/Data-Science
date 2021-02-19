@@ -14,28 +14,33 @@ my_columns = ['Ticker', 'Company Name','Stock Price', 'Market Capitalization', '
 
 ticker_df = pd.DataFrame(ticker_list)
 
-for symbol in ticker_df:
-    api_url = f'https://sandbox.iexapis.com/stable/stock/{symbol}/quote?token={IEX_CLOUD_API_TOKEN}'
-    data = requests.get(api_url)
-  
+symbol_strings = [ticker_df]
 
-    print(data)
-    final_dataframe = ticker_df.append(
-        pd.Series(
-            [
-                data['symbol'],
-                data['companyName'],
-                data['latestPrice'],
-                data['marketCap'],
-                data['changePercent'],
-                data['peRatio'],
-                data['volume'],
-                data['week52High'],
-                data['week52Low'],
-            'N/A'],
-        index= my_columns),
-    ignore_index=True
-    )
+final_dataframe = pd.DataFrame(columns = my_columns)
+
+for symbol_string in symbol_strings:
+        batch_api_call_url = f'https://sandbox.iexapis.com/stable/stock/market/batch/?types=quote&symbols={symbol_string}&token={IEX_CLOUD_API_TOKEN}'
+data = requests.get(batch_api_call_url).json()
+
+for symbol in symbol_string.split(','):
+
+    final_dataframe = final_dataframe.append(
+        pd.Series([symbol, 
+        data[symbol]['quote']['companyName'], 
+        data[symbol]['quote']['latestPrice'],
+        data[symbol]['quote']['marketCap'],
+        data[symbol]['quote']['changePercent'],
+        data[symbol]['quote']['peRatio'],
+        data[symbol]['quote']['volume'],
+        data[symbol]['quote']['week52High'],
+        data[symbol]['quote']['wewek52Low'],
+        'N/A'], 
+        index = my_columns), 
+        ignore_index = True)
+
+
+print(final_dataframe.head())
+  
 
 #/
 
