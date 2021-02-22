@@ -1,4 +1,4 @@
-**/secrets.py
+*/secrets.py
 /ml_ven/Workbook_ex/ml_venv/**
 
 Workbook_ex/ml_venv/pyvenv.cfg
@@ -1908,3 +1908,4 @@ Workbook_ex/ml_venv/Scripts/pip3.9.exe
 Workbook_ex/ml_venv/Scripts/pip3.exe
 Workbook_ex/ml_venv/Scripts/python.exe
 Workbook_ex/ml_venv/Scripts/pythonw.exe
+node_modules

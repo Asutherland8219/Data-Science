@@ -28,7 +28,7 @@ from keras.layers import LSTM
 from keras.wrappers.scikit_learn import KerasRegressor
 
 '''Function and modules for  time series models'''
-from statstmodels.tsa.arima_model import ARIMA
+from statsmodels.tsa.arima_model import ARIMA
 import statsmodels.api as sm 
 
 '''Function and modules for data preparation and visualization'''
@@ -59,4 +59,23 @@ return_period = 5
 Y = np.log(stk_data.loc[:, ('Adj Close', 'MSFT')]).diff(return_period).\
 shift(-return_period)
 Y.name = Y.name[-1]+'_pred'
+
+X1 = np.log(stk_data.loc[:,('Adj Close', ('GOOGL', 'IBM'))]).diff(return_period)
+X1.columns = X1.columns.droplevel()
+X2 = np.log(ccy_data).diff(return_period)
+X3 = np.log(idx_data).diff(return_period)
+
+X4 = pd.concat([np.log(stk_data.loc[:, ('Adj Close', 'MSFT')]).diff(i) \
+    for i in [return_period, return_period * 3, \
+        return_period*6, return_period*12]], axis=1).dropna()
+X4.columns = ['MSFT_DT', 'MSFT_3DT', 'MSFT_6DT', 'MSFT_12DT']
+
+X = pd.concat([X1, X2, X3, X4], axis=1)
+
+dataset = pd.concat([Y, X], axis=1).dropna().iloc[::return_period, :]
+Y = dataset.loc[:, Y.name]
+X = dataset.loc[:, X.columns]
+
+print(dataset.head())
+
 
