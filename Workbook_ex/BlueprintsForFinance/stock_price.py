@@ -158,3 +158,21 @@ ax.set_xticklabels(names)
 fig.set_size_inches(15,8)
 pyplot.show()
 
+''' Training and test error '''
+# comparing algorithms
+fig = pyplot.figure()
+
+ind = np.arange(len(names)) # x axis location 
+width = 0.35 #bar width 
+
+fig.suptitle('Algorithm Comparison')
+ax = fig.add_subplot(111)
+pyplot.bar(ind - width/2, train_results, width=width, label='Train Error')
+pyplot.bar(ind + width/2, test_results, width=width, label='Test Error')
+fig.set_size_inches(15,8)
+pyplot.legend()
+ax.set_xticks(ind)
+ax.set_xticklabels(names)
+pyplot.show()
+
+
