@@ -45,7 +45,7 @@ from pandas.plotting import scatter_matrix
 from statsmodels.graphics.tsaplots import plot_acf
 
 #load the data
-stk_tickers = ['MSFT', 'AAPL', 'GOOGL']
+stk_tickers = ['MSFT', 'IBM', 'GOOGL']
 ccy_tickers = ['DEXJPUS', 'DEXUSUK']
 idx_tickers = ['SP500', 'DJIA', 'VIXCLS']
 
@@ -60,12 +60,12 @@ Y = np.log(stk_data.loc[:, ('Adj Close', 'MSFT')]).diff(return_period).\
 shift(-return_period)
 Y.name = Y.name[-1]+'_pred'
 
-X1 = np.log(stk_data.loc[:,('Adj Close', ('GOOGL', 'AAPL'))]).diff(return_period)
+X1 = np.log(stk_data.loc[:,('Adj Close', ('GOOGL', 'IBM'))]).diff(return_period)
 X1.columns = X1.columns.droplevel()
 X2 = np.log(ccy_data).diff(return_period)
 X3 = np.log(idx_data).diff(return_period)
 
-X4 = pd.concat([np.log(stk_data.loc[:, ('Adj Close', 'AAPL')]).diff(i) \
+X4 = pd.concat([np.log(stk_data.loc[:, ('Adj Close', 'IBM')]).diff(i) \
     for i in [return_period, return_period * 3, \
         return_period*6, return_period*12]], axis=1).dropna()
 X4.columns = ['MSFT_DT', 'MSFT_3DT', 'MSFT_6DT', 'MSFT_12DT']
@@ -175,4 +175,50 @@ ax.set_xticks(ind)
 ax.set_xticklabels(names)
 pyplot.show()
 
+''' Time Series Based Models with ARIMA and LSTM '''
+### lok at this in more depth, needs more work ###
+X_train_ARIMA = X_train.loc[:,['GOOGL', 'IBM', 'DEXJPUS', 'SP500', 'DJIA', 'VIXCLS']]
+X_test_ARIMA = X_test.loc[:,['GOOGL', 'IBM', 'DEXJPUS', 'SP500', 'DJIA', 'VIXCLS']]
+tr_len = len(X_train_ARIMA)
+te_len = len(X_test_ARIMA)
+to_len = len(X)
+
+# Use the ARIMAX MODEL where X represents the exogenous models 
+modelARIMA= ARIMA(endog=Y_train, exog=X_train_ARIMA, order=[1,0,0])
+model_fit = modelARIMA.fit()
+
+## Fit the model
+error_training_ARIMA = mean_squared_error(Y_train, model_fit.fittedvalues)
+predicted = model_fit.predict(start = tr_len -1 , end = to_len -1, exog = X_test_ARIMA)[1:]
+error_Test_ARIMA = mean_squared_error(Y_test, predicted)
+error_Test_ARIMA 
+
+### LSTM Model ###
+seq_len = 2 #Length of the seq for the LSTM 
+
+Y_train_LSTM, Y_test_LSTM = np.arrary(Y_train)[seq_len-1:], np.array(Y_test)
+X_train_LSTM = np.zeros((X_train.shape[0]+1-seq_len, seq_len, X_train.shape[1]))
+X_test_LSTM = np.zers((X_test.shape[0], seq_len, X.shape[1]))
+for i in range(seq_len):
+    X_train_LSTM[:, i, :] = np.array(X_train)[i:X_train.shape[0]+i+1-seq_len, :]
+    X_test_LSTM[:, i, :] = np.array(X)\
+        [X_train.shape[0]+i-1:X.shape[0]+i+1-seq_len, :]
+
+# LSTM Network #
+def create_LSTMmodel(learn_rate = 0.01, moementum=0):
+    # create model 
+    model = Sequential()
+    model.add(LSTM(50, input_shape=(X_train_LSTM.shape[1],X_train_LSTM.shape[2])))
+    model.add(Dense(1))
+    optimizer = SGD(lr=learn_rate, momentum=momentum)
+    model.compile(loss='mse', optimizer='adam')
+    return model 
+LSTMModel = create_LSTMmodel(learn_rate=0.01, moementum=0)
+LSTMModel_fit = LSTMModel.fit(X_train_LSTM, Y_train_LSTM, validation_data=(X_test_LSTM, Y_test_LSTM), epochs=330, batch_size=72, verbose=0, shuffle=False)
+
+# Plot the data 
+pyplot.plot(LSTMModel_fit.history['loss'], label='train',)
+pyplot.plot(LSTMModel_fit.history['val_loss'], '--', label='test',)
+pyplot.legend()
+pyplot.show()
 
