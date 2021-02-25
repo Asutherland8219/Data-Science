@@ -188,7 +188,7 @@ modelARIMA= ARIMA(endog=Y_train, exog=X_train_ARIMA, order=[1,0,0])
 model_fit = modelARIMA.fit()
 
 ## Fit the model
-error_training_ARIMA = mean_squared_error(Y_train, model_fit.fittedvalues)
+error_Training_ARIMA = mean_squared_error(Y_train, model_fit.fittedvalues)
 predicted = model_fit.predict(start = tr_len -1 , end = to_len -1, exog = X_test_ARIMA)[1:]
 error_Test_ARIMA = mean_squared_error(Y_test, predicted)
 error_Test_ARIMA 
@@ -196,24 +196,24 @@ error_Test_ARIMA
 ### LSTM Model ###
 seq_len = 2 #Length of the seq for the LSTM 
 
-Y_train_LSTM, Y_test_LSTM = np.arrary(Y_train)[seq_len-1:], np.array(Y_test)
+Y_train_LSTM, Y_test_LSTM = np.array(Y_train)[seq_len-1:], np.array(Y_test)
 X_train_LSTM = np.zeros((X_train.shape[0]+1-seq_len, seq_len, X_train.shape[1]))
-X_test_LSTM = np.zers((X_test.shape[0], seq_len, X.shape[1]))
+X_test_LSTM = np.zeros((X_test.shape[0], seq_len, X.shape[1]))
 for i in range(seq_len):
     X_train_LSTM[:, i, :] = np.array(X_train)[i:X_train.shape[0]+i+1-seq_len, :]
     X_test_LSTM[:, i, :] = np.array(X)\
         [X_train.shape[0]+i-1:X.shape[0]+i+1-seq_len, :]
 
 # LSTM Network #
-def create_LSTMmodel(learn_rate = 0.01, moementum=0):
+def create_LSTMmodel(learn_rate = 0.01, momentum= 0):
     # create model 
     model = Sequential()
     model.add(LSTM(50, input_shape=(X_train_LSTM.shape[1],X_train_LSTM.shape[2])))
     model.add(Dense(1))
-    optimizer = SGD(lr=learn_rate, momentum=momentum)
+    optimizer = SGD(lr=learn_rate, momentum= 0)
     model.compile(loss='mse', optimizer='adam')
     return model 
-LSTMModel = create_LSTMmodel(learn_rate=0.01, moementum=0)
+LSTMModel = create_LSTMmodel(learn_rate=0.01, momentum=0)
 LSTMModel_fit = LSTMModel.fit(X_train_LSTM, Y_train_LSTM, validation_data=(X_test_LSTM, Y_test_LSTM), epochs=330, batch_size=72, verbose=0, shuffle=False)
 
 # Plot the data 
@@ -221,4 +221,70 @@ pyplot.plot(LSTMModel_fit.history['loss'], label='train',)
 pyplot.plot(LSTMModel_fit.history['val_loss'], '--', label='test',)
 pyplot.legend()
 pyplot.show()
+
+error_Training_LSTM = mean_squared_error(Y_train_LSTM , LSTMModel.predict(X_train_LSTM))
+predicted = LSTMModel.predict(X_test_LSTM)
+error_Test_LSTM = mean_squared_error(Y_test, predicted)
+
+
+test_results.append(error_Test_ARIMA)
+test_results.append(error_Test_LSTM)
+
+train_results.append(error_Training_ARIMA)
+train_results.append(error_Test_LSTM)
+
+names.append("ARIMA")
+names.append("LSTM")
+
+
+''' Model Tuning and Grid Search '''
+def evaluate_arima_model(arima_order):
+    #predicted = list()
+    modelARIMA=ARIMA(endog=Y_train, exog=X_train_ARIMA, order=arima_order)
+    model_fit= modelARIMA.fit()
+    error = mean_squared_error(Y_train, model_fit.fittedvalues)
+    return error
+
+# Evaluate combinations of p, d and q values for the ARIMA model 
+def evaluate_models(p_values, d_values, q_values):
+    best_score, best_cfg = float("inf"), None
+    for p in p_values:
+        for d in d_values:
+            for q in q_values:
+                order = (p,d,q)
+                try:
+                    mse = evaluate_arima_model(order)
+                    if mse < best_score:
+                        best_score, best_cfg = mse, order
+                    print('ARIMA%s MSE=%.7f' % (order,mse))
+                except:
+                        continue
+    print('Best ARIMA%s MSE=%.7f' % (best_cfg, best_score))
+
+# Evaluate parameters 
+p_values = [0,1,2]
+d_values = range(0,2)
+q_values = range(0,2)
+evaluate_models(p_values, d_values, q_values)
+
+''' Check the model on the test set '''
+#prepare
+model_ARIMAtuned = ARIMA(endog=Y_train, exog=X_train_ARIMA, order = [2,0,1])
+model_fit_tuned = model_ARIMAtuned.fit()
+
+# estimate accuracy 
+predicted_tuned = model_fit.predict(start = tr_len -1 , end = to_len -1, exog = X_test_ARIMA)[1:]
+print(mean_squared_error(Y_test, predicted_tuned))
+
+''' Final Graph ''' 
+# plotting actual vs predicted
+predicted_tuned.index = Y_test.index 
+pyplot.plot(np.exp(Y_test).cumprod(), 'r', label = 'actual')
+
+# plotting t, a seperately
+pyplot.plot(np.exp(predicted_tuned).cumprod(), 'b--', label = 'predicted')
+pyplot.legend()
+pyplot.rcParams["figure.figsize"] = (8, 5)
+pyplot.show()
+
 
