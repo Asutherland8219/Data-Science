@@ -92,11 +92,95 @@ Y = Ps
 X = np.concatenate([Ks.reshape(-1,1), Ts.reshape(-1,1), Sigmas.reshape(-1,1)], axis=1)
 
 dataset= pd.DataFrame(np.concatenate([Y.reshape(-1, 1), X], axis=1), columns=['Price', 'Moneyness', 'Time', 'Vol'])
-
+print(dataset.head())
 # Data visualization 
-pyplot.figure(figsize=(15,15))
+
 scatter_matrix(dataset, figsize=(12,12))
 pyplot.show()
 
+# Univariation feature selections 
+bestfeatures = SelectKBest(k='all', score_func=f_regression)
+fit = bestfeatures.fit(X,Y)
+dfscores = pd.DataFrame(fit.scores_)
+dfcolumns = pd.DataFrame(['Moneyness','Time', 'Vol'])
+# concat two df for better visualization 
+featureScores = pd.concat([dfcolumns,dfscores], axis = 1)
+featureScores.columns = ['Specs', 'Score'] # naming the data frame columns 
+featureScores.nlargest(10, 'Score').set_index('Specs')
+
+''' Train, test and split the models ''' 
+validation_size = 0.2 
+train_size = int(len(X) * (1-validation_size))
+X_train, X_test = X[0:train_size], X[train_size:len(X)]
+Y_train, Y_test = Y[0:train_size], Y[train_size:len(X)]
+
+# k fold parameters
+num_folds = 10 
+seed = 7
+scoring = 'neg_mean_squared_error'
 
 
+# compare the algorithms
+models = []
+
+# linear models 
+models.append(('LR', LinearRegression()))
+models.append(('KNN', KNeighborsRegressor()))
+models.append(('CART', DecisionTreeRegressor()))
+models.append(('SVR', SVR()))
+
+# Artificial Neurla Networks
+models.append(('MLP', MLPRegressor()))
+
+# Boosting and Bagging methods 
+## Boosting 
+models.append(('ABR', AdaBoostRegressor()))
+models.append(('GBR', GradientBoostingRegressor()))
+
+## Bagging methods 
+models.append(('RFR', RandomForestRegressor()))
+models.append(('ETR', ExtraTreesRegressor()))
+
+''' Model Tuning and Finalizing the model ''' 
+# too many middle nodes in middle layer can create a too well fitted model and it wont generate data 
+
+'''
+hidden_layer_sizes : tuple, length = n_layers - 2, default(100,)
+The ith element represents the number of neurons in the ith hidden layer. 
+'''
+
+param_grid= {'hidden_layer_sizes': [(20,), (50,), (20,20), (20,30,20)]}
+model = MLPRegressor()
+kfold = KFold(n_splits=num_folds, random_state=seed)
+grid = GridSearchCV(estimator=model, param_grid=param_grid, scoring=scoring, cv=kfold)
+grid_result = grid.fit(X_train, Y_train)
+print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
+
+means = grid_result.cv_results_['mean_test_score']
+stds = grid_result.cv_results_['std_test_score']
+params = grid_result.cv_results_['params']
+for mean, stdev, param in zip(means, stds, params):
+    print("%f (%f) with: %r" % (mean, stdev, param))
+
+## this helps us identify the best possible model  combo with the ideal hidden layer sizes
+## now we can prepare the model 
+
+model_tuned = MLPRegressor(hidden_layer_sizes=(20, 30, 20))
+model_tuned.fit((X_train, Y_train))
+
+# estimate accuracy and transform the validation data set 
+predictions = model_tuned.predict(X_test)
+print(mean_squared_error(Y_test, predictions))
+
+## note: the mean_squared_erro in this instance is actually RMSE
+
+''' Additional analysis of the data; removing the volatitlity '''
+# we are now trying to predict the price without the volatility data 
+## we are diting the data and recreating the training and test size 
+'''
+X = [:, :2]
+validation_size = 0.2
+train_size = int(len(X) * (1-validation_size))
+X_train, X_test = X[0:train_size], X[train_size:len(X)]
+Y_train, Y_test = Y[0:train_size], Y[train_size:len(X)]
+'''
