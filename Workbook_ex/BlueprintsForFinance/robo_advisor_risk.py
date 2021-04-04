@@ -47,6 +47,48 @@ from pandas.plotting import scatter_matrix
 from statsmodels.graphics.tsaplots import plot_acf
 
 # load the dataset
-dataset = pd.read_excel('SCFP2009panel.xlsx')
+dataset = pd.read_excel('Data-Science\Workbook_ex\BlueprintsForFinance\SCFP2009panel.xlsx')
 
-dataset.shape
+print(dataset.shape) ### first number is the X or the rows, Y is the columns. The y (515) is also the number of features
+
+### We now have to test the risk tolerance
+
+# compute risky and risk free assets for the year 2007
+dataset['RiskFree07']= dataset['LIQ07'] + dataset['CDS07'] + dataset['SAVBND07'] + dataset['CASHLI07']
+dataset['Risky07']= dataset['NMMF07'] + dataset['STOCKS07'] + dataset['BOND07']
+
+# compute risky and reisk free assets for the year 2009
+dataset['RiskFree09']= dataset['LIQ09'] + dataset['CDS09'] + dataset['SAVBND09'] + dataset['CASHLI09']
+dataset['Risky09']= dataset['NMMF09'] + dataset['STOCKS09'] + dataset['BOND09']
+
+# computer the risk tolerance for 2007
+dataset['RT07']= dataset['Risky07']/(dataset['Risky07']+dataset['RiskFree07'])
+
+# Average stock index to normalize the data from the risky assets in 2009
+Average_SP500_2007=1478
+Average_SP500_2009=948
+
+# compute data risk tolerance for 2009
+dataset['RT09'] = dataset['Risky09']/(dataset['Risky09']+dataset['RiskFree09'])*(Average_SP500_2009/Average_SP500_2007)
+
+print(dataset.head())
+
+## computer percent change in the data set
+dataset['PercentageChange'] = np.abs(dataset['RT09']/dataset['RT07']-1)
+
+## Drop NA and NAN rows
+dataset = dataset.dropna(axis=0)
+
+dataset=dataset[~dataset.isin([np.nan, np.inf, -np.inf]).any(1)]
+
+## Plot and visualize the data 
+sentiment07 = sns.histplot(dataset['RT07'], kde=False, bins=int(180/5), color= 'blue', line_kws={'edgecolor':'black'})
+
+sentiment09 = sns.histplot(dataset['RT09'], kde=False, bins=int(180/5), color= 'blue', line_kws={'edgecolor':'black'})
+
+
+''' Graphs keep overlapping, needs further analysis ''' 
+
+
+
+
