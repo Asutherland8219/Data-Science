@@ -19,6 +19,7 @@ from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2, f_regression
 
@@ -193,12 +194,14 @@ feat_importances = pd.Series(model.feature_importances_, index=X.columns)
 feat_importances.nlargest(10).plot(kind='barh')
 pyplot.show()
 
+### This graph shoes the importance of each feature in the model 
+
 ''' Save model for later use '''
 filename = 'finalized_model.sav'
-dump(model, open(filname, 'wb'))
+dump(model, open(filename, 'wb'))
 
 #load the model 
-loaded_model = load(open(filname, 'rb'))
+loaded_model = load(open(filename, 'rb'))
 
 #estimate accuracy
 predictions = loaded_model.predict(X_validation)
