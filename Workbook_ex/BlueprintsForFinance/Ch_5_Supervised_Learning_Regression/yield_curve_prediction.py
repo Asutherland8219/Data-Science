@@ -97,8 +97,55 @@ Y.plot(style=['-', '--', ':'])
 # Scatter plot matrix 
 pyplot.figure(figsize=(15,15))
 scatter_matrix(dataset, figsize=(15, 16))
+
+
+# Correlation matrix
+correlation = dataset.corr()
+pyplot.figure(figsize=(15, 15))
+pyplot.title('Correlation Matrix')
+sns.heatmap(correlation, vmax=1, square=True, annot=True, cmap='cubehelix')
 pyplot.show()
 
+
+# Time Series Analysis 
+temp_Y = dataset('[DGS1MO_pred]')
+res = sm.tsa.seasonal_decompose(temp_Y, freq=52)
+fig = res.plot()
+fig.set_figheight(8)
+fig.set_figwidth(15)
+pyplot.show()
+
+temp_Y = dataset('[DGS5_pred]')
+res = sm.tsa.seasonal_decompose(temp_Y, freq=52)
+fig = res.plot()
+fig.set_figheight(8)
+fig.set_figwidth(15)
+pyplot.show()
+
+
+temp_Y = dataset('[DGS30_pred]')
+res = sm.tsa.seasonal_decompose(temp_Y, freq=52)
+fig = res.plot()
+fig.set_figheight(8)
+fig.set_figwidth(15)
+pyplot.show()
+
+### data prep and analysis
+
+# Univariate Feature Selection
+bestfeatures = SelectKBest(k=5, score_func=f_regression)
+for col in Y.columns:
+    temp_Y = dataset[col]
+    temp_X = dataset.loc[:, X.columns]
+    fit = bestfeatures.fit(temp_X, temp_Y)
+    dfscores = pd.DataFrame(fit.scores_)
+    dfcolumns = pd.DataFrame(X.columns)
+    ## concat two DF for better visualization
+    featureScores = pd.concat([dfcolumns, dfscores], axis=1)
+    featureScores.columns = ['Specs', 'Score']
+    print(col)
+    print(featureScores.nlargest(10, 'Score'))
+    print('--------------')
 
 
 
