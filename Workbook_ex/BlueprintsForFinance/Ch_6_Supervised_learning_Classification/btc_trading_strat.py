@@ -30,7 +30,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 ''' Load data and peek the dataset '''
-dataset = pd.read_csv('Data-Science\Workbook_ex\BlueprintsForFinance\Ch_6_Supervised_learning_Classification\Btc_data.zip', compression='zip', low_memory=True)
+dataset = pd.read_csv('Workbook_ex/Datasets/BTCdata.zip', compression='zip', low_memory=True)
 
 print(dataset.head())
 
