@@ -90,8 +90,59 @@ def MOM(df, n):
 dataset['MOM10'] = MOM(dataset['Close'], 10)
 dataset['MOM30'] = MOM(dataset['Close'], 30)
 
-# check stop 
-print(dataset.head())
+## Going to end up losing more data points early on  due to NaN errors
+
+
+# Calculation of RSI 
+def RSI(series, period):
+    delta = series.diff().dropna()
+    u = delta * 0
+    d = u.copy()
+    u[delta > 0] = delta[delta > 0]
+    d[delta < 0] = -delta[delta < 0]
+    u[u.index[period-1]] = np.mean( u[:period] ) # sum of avg gains
+    u = u.drop(u.index[:(period-1)])
+    d[d.index[period-1]] = np.mean( d[:period] ) # sum of avg gains
+    d = d.drop(d.index[:(period-1)])
+    rs = u.ewm(com=period-1, adjust=False).mean() / d.ewm(com=period-1, adjust=False).mean()
+    return 100 - 100 / (1 + rs)
+dataset['RSI10'] = RSI(dataset['Close'], 10)
+dataset['RSI30'] = RSI(dataset['Close'], 30)
+dataset['RSI200'] = RSI(dataset['Close'], 200)
+
+# Calculation of Stocchasting Oscillator
+def STOK (close, low, high, n):
+    STOK = ((close - low.rolling(n).min()) / (high.rolling(n).max() - low.rolling(n).min())) * 100
+    return STOK
+
+def STOD (close, low, high, n):
+    STOK = ((close - low.rolling(n).min()) / (high.rolling(n).max() - low.rolling(n).min())) * 100
+    STOD = STOK.rolling(3).mean()
+    return STOD
+
+dataset['%K10'] = STOK(dataset['Close'], dataset['Low'], dataset['High'], 10)
+dataset['%D10'] = STOD(dataset['Close'], dataset['Low'], dataset['High'], 10)
+dataset['%K30'] = STOK(dataset['Close'], dataset['Low'], dataset['High'], 30)
+dataset['%D30'] = STOD(dataset['Close'], dataset['Low'], dataset['High'], 30)
+dataset['%K200'] = STOK(dataset['Close'], dataset['Low'], dataset['High'], 200)
+dataset['%D200'] = STOD(dataset['Close'], dataset['Low'], dataset['High'], 200)
+
+# Calculation of moving avg 
+def MA(df, n):
+    MA = pd.Series(df['Close'].rolling(n, min_periods=n).mean(), name='MA_' + str(n))
+    return MA
+
+dataset['MA21'] = MA(dataset, 10)
+dataset['MA63'] = MA(dataset, 30)
+dataset['MA252'] = MA(dataset, 200)
+
+# stop check
+
+print(dataset.tail())
+
+''' Data Visualization '''
+
+
 
 
 
