@@ -4,6 +4,7 @@ from datetime import time
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib import pyplot
 from pandas import read_csv, set_option
 from pandas.plotting import scatter_matrix
 import seaborn as sns
@@ -28,6 +29,8 @@ from keras.optimizers import SGD
 
 #Disable the warnings
 import warnings
+
+from sklearn.utils import validation
 warnings.filterwarnings('ignore')
 
 ''' Load data and peek the dataset '''
@@ -142,10 +145,76 @@ print(dataset.tail())
 
 ''' Data Visualization '''
 
+dataset[['Weighted_Price']].plot(grid=True)
+pyplot.show()
+
+fig = pyplot.figure()
+plot = dataset.groupby(['signal']).size().plot(kind='barh', color='red')
+pyplot.show()
 
 
+''' Evaluate Algorithms and models '''
 
+# split the validation set 
+subset_dataset = dataset.iloc[-100000:]
+Y = subset_dataset['signal']
+X = subset_dataset.loc[:, dataset.columns != 'signal']
+validation_size = 0.2
+seed = 1
+X_train, X_validation, Y_train, Y_validation = train_test_split(X, Y, test_size=validation_size, random_state=1)
 
+num_folds = 10
+scoring = 'accuracy'
+
+# # compare models and algos
+# models = []
+# models.append(('LR', LogisticRegression(n_jobs=-1)))
+# models.append(('LDA', LinearDiscriminantAnalysis()))
+# models.append(('KNN', KNeighborsClassifier()))
+# models.append(('CART', DecisionTreeClassifier()))
+# models.append(('NB', GaussianNB()))
+# # Neural Net 
+# models.append(('NN', MLPClassifier()))
+# # Ensemble and boosting models 
+# models.append(('AB', AdaBoostClassifier()))
+# models.append(('GBM', GradientBoostingClassifier()))
+# # Bagging method
+# models.append(('RF', RandomForestClassifier(n_jobs=-1)))
+
+# ## K-folds cross validation
+# results = []
+# names = []
+# for name, model in models:
+#     kfold = KFold(n_splits=num_folds, random_state=seed)
+#     cv_results = cross_val_score(model, X_train, Y_train, cv=kfold, scoring=scoring)
+#     results.append(cv_results)
+#     names.append(name)
+#     msg = '%s: %f (%f)' % (name, cv_results.mean(), cv_results.std())
+#     print(msg)
+
+# ## Visualize the algo comparision 
+# fig = pyplot.figure()
+# fig.suptitle('Algorithm Comparison')
+# ax = fig.add_subplot(111)
+# pyplot.boxplot(results)
+# ax.set_xticklabels(names)
+# fig.set_size_inches(15,8)
+# pyplot.show()
+
+''' Model tuning and grid search '''
+
+# random forest was the best so we will be using that
+n_estimators = [20,80]
+max_depth = [5,10]
+criterion = ['gini', 'entropy']
+param_grid = dict(n_estimators= n_estimators, max_depth= max_depth, criterion= criterion)
+model= RandomForestClassifier(n_jobs=-1)
+kfold= KFold(n_splits=num_folds, random_state=seed)
+grid= GridSearchCV(estimator=model, param_grid=param_grid, scoring=scoring, cv=kfold)
+grid_result = grid.fit(X_train, Y_train)
+print("Best %f using %s" % (grid_result.best_score_, grid_result.best_params_))
+
+### optimal model accorging to running Best 0.915762 using {'criterion': 'gini', 'max_depth': 10, 'n_estimators': 80}
 
 
 
