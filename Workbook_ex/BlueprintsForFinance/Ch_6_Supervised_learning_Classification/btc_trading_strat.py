@@ -215,6 +215,43 @@ grid_result = grid.fit(X_train, Y_train)
 print("Best %f using %s" % (grid_result.best_score_, grid_result.best_params_))
 
 ### optimal model accorging to running Best 0.915762 using {'criterion': 'gini', 'max_depth': 10, 'n_estimators': 80}
+''' Finalize the model '''
+model = RandomForestClassifier(criterion='gini', n_estimators=80, max_depth=10, n_jobs=-1)
+
+model.fit(X_train, Y_train)
+
+## Estimate the accuracy on the validation set 
+predictions = model.predict(X_validation)
+print(accuracy_score(Y_validation, predictions))
+print(confusion_matrix(Y_validation, predictions))
+print(classification_report(Y_validation, predictions))
+
+## create heatmap of predictions 
+df_cm = pd.DataFrame(confusion_matrix(Y_validation,predictions), columns=np.unique(Y_validation), index= np.unique(Y_validation))
+df_cm.index.name = 'Actual'
+df_cm.columns.name = 'Predicted'
+sns.heatmap(df_cm, cmap='Blues', annot=True, annot_kws={"size":16})
+pyplot.show()
+
+## Figure out the variable importance ( how important each feature is to the model )
+Importance = pd.DataFrame({'Importance':model.feature_importances_*100}, index= X.columns)
+Importance.sort_values('Importance', axis=0, ascending=True).plot(kind='barh', color='r')
+pyplot.xlabel('Variable Importance')
+pyplot.show()
 
 
+''' Backtest the data ''' 
+backetestdata = pd.DataFrame(index=X_validation.index)
 
+backetestdata['signal_pred'] = predictions
+backetestdata['signal_actual'] = Y_validation
+backetestdata['Market Returns'] = X_validation['Close'].pct_change()
+backetestdata['Actual Returns'] = backetestdata['Market Returns'] * backetestdata['signal_actual'].shift(1)
+backetestdata['Strategy Returns'] = backetestdata['Market Returns'] * backetestdata['signal_pred'].shift(1)
+backetestdata = backetestdata.reset_index()
+print(backetestdata.head())
+
+pyplot.hist(backetestdata[['Strategy Returns', 'Actual Returns']].cumsum())
+pyplot.plot(backetestdata[['Strategy Returns', 'Actual Returns']].cumsum())
+
+pyplot.show()
