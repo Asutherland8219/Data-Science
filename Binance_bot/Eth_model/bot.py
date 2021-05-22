@@ -20,6 +20,19 @@ in_position = False
 client = Client(config.API_KEY, config.API_SECRET, tld='cad')
 ## btcusdt is bitcoin, ltcusdt is litecoin, 
 
+def order(side, quantity, symbol, order_type=ORDER_TYPE_MARKET):
+    try:
+        print("sending order")
+        order = client.create_order(symbol=symbol,
+        side=side,
+        type=order_type,
+        quantity=quantity)
+        print(order)
+    except Exception as e:
+        return False
+    
+    return True
+
 def on_open(ws):
     print('opened connection')
 
@@ -52,6 +65,9 @@ def on_message(ws, message):
 
             if last_rsi > RSI_OVERBOUGHT:
                 print("Sell! Sell! Sell!")
+                order_succeeded = order(SIDE_SELL, TRADE_QUANTITY, TRADE_SYMBOL)
+                if order_succeeded:
+                    in_positions = False
             else: 
                 print("It is overbought, but we dont own any.")
 
@@ -60,6 +76,10 @@ def on_message(ws, message):
                     print("It is oversold, but you already own it, nothing to do")
                 else:
                     print("Buy! Buy! Buy!")
+                    order_succeeded = order(SIDE_BUY, TRADE_QUANTITY, TRADE_SYMBOL)
+                if order_succeeded:
+                    in_positions = True
+                    
 
 
 
