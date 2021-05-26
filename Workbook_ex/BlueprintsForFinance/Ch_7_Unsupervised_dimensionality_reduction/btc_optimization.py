@@ -199,105 +199,60 @@ print(dfsvd.shape)
 print(dfsvd.head())
 
 # visualize the reduced features 
+##################### Commented out because of calculation time ######################################
 svdcols = [c for c in dfsvd.columns if c[0] == 'c']
 
-plotdims = 5
-ploteorows = 1 
-dfsvdplot = dfsvd[svdcols].iloc[:, :plotdims]
-dfsvdplot['signal']= Y_train
-ax = sns.pairplot(dfsvdplot.iloc[::ploteorows, :], hue='signal', size=1.8)
-pyplot.show()
-
-# 3d scatter 
-def scatter_3D(A, elevation=30, azimuth=120):
-    maxpts= 1000
-    fig = pyplot.figure(1, figsize=(9,9))
-    ax = Axes3D(fig, rect=[0, 0, .95, 1], elev = elevation, azim= azimuth)
-    ax.set_xlabel('component 0')
-    ax.set_ylabel('component 1')
-    ax.set_zlabel('component 2')
-
-    #plot subset of points 
-    rndpts = np.sort(np.random.choice(A.shape[0], min(maxpts, A.shape[0]), replace=False))
-    coloridx = np.unique(A.iloc[rndpts]['signal'], return_inverse=True)
-    colors = coloridx[1] / len(coloridx[0])
-    sp = ax.scatter(A.iloc[rndpts, 0], A.iloc[rndpts, 1], A.iloc[rndpts,2], c= colors, cmap="jet", marker='o', alpha= 0.6, s= 50, linewidths= 0.8, edgecolor = '#BBBBBB')
-
-    pyplot.show()
-
-'''t-SNE visualization '''
-tsne = TSNE(n_components = 2 , random_state= 0)
-Z = tsne.fit_transform(dfsvd[svdcols])
-dftsne = pd.DataFrame(Z, columns=['x', 'y'], index= dfsvd.index)
-
-dftsne['signal'] = Y_train
-
-g = sns.lmplot('x', 'y', dftsne, hue='signal', fit_reg= False, size= 8, scatter_kws= {'alpha':0.7, 's':60})
-g.axes.flat[0].set_title('Scatterplot of a Multiple Dimension Dataset reduced to 2D using t-SNE')
-pyplot.show()
-
-
-
-
-
-
-
-
-
-
-
-# ''' Model tuning and grid search '''
-
-# # random forest was the best so we will be using that
-# n_estimators = [20,80]
-# max_depth = [5,10]
-# criterion = ['gini', 'entropy']
-# param_grid = dict(n_estimators= n_estimators, max_depth= max_depth, criterion= criterion)
-# model= RandomForestClassifier(n_jobs=-1)
-# kfold= KFold(n_splits=num_folds, random_state=seed)
-# grid= GridSearchCV(estimator=model, param_grid=param_grid, scoring=scoring, cv=kfold)
-# grid_result = grid.fit(X_train, Y_train)
-# print("Best %f using %s" % (grid_result.best_score_, grid_result.best_params_))
-
-# ### optimal model accorging to running Best 0.915762 using {'criterion': 'gini', 'max_depth': 10, 'n_estimators': 80}
-# ''' Finalize the model '''
-# model = RandomForestClassifier(criterion='gini', n_estimators=80, max_depth=10, n_jobs=-1)
-
-# model.fit(X_train, Y_train)
-
-# ## Estimate the accuracy on the validation set 
-# predictions = model.predict(X_validation)
-# print(accuracy_score(Y_validation, predictions))
-# print(confusion_matrix(Y_validation, predictions))
-# print(classification_report(Y_validation, predictions))
-
-# ## create heatmap of predictions 
-# df_cm = pd.DataFrame(confusion_matrix(Y_validation,predictions), columns=np.unique(Y_validation), index= np.unique(Y_validation))
-# df_cm.index.name = 'Actual'
-# df_cm.columns.name = 'Predicted'
-# sns.heatmap(df_cm, cmap='Blues', annot=True, annot_kws={"size":16})
+# plotdims = 5
+# ploteorows = 1 
+# dfsvdplot = dfsvd[svdcols].iloc[:, :plotdims]
+# dfsvdplot['signal']= Y_train
+# ax = sns.pairplot(dfsvdplot.iloc[::ploteorows, :], hue='signal', size=1.8)
 # pyplot.show()
 
-# ## Figure out the variable importance ( how important each feature is to the model )
-# Importance = pd.DataFrame({'Importance':model.feature_importances_*100}, index= X.columns)
-# Importance.sort_values('Importance', axis=0, ascending=True).plot(kind='barh', color='r')
-# pyplot.xlabel('Variable Importance')
+# # 3d scatter 
+# def scatter_3D(A, elevation=30, azimuth=120):
+#     maxpts= 1000
+#     fig = pyplot.figure(1, figsize=(9,9))
+#     ax = Axes3D(fig, rect=[0, 0, .95, 1], elev = elevation, azim= azimuth)
+#     ax.set_xlabel('component 0')
+#     ax.set_ylabel('component 1')
+#     ax.set_zlabel('component 2')
+
+#     #plot subset of points 
+#     rndpts = np.sort(np.random.choice(A.shape[0], min(maxpts, A.shape[0]), replace=False))
+#     coloridx = np.unique(A.iloc[rndpts]['signal'], return_inverse=True)
+#     colors = coloridx[1] / len(coloridx[0])
+#     sp = ax.scatter(A.iloc[rndpts, 0], A.iloc[rndpts, 1], A.iloc[rndpts,2], c= colors, cmap="jet", marker='o', alpha= 0.6, s= 50, linewidths= 0.8, edgecolor = '#BBBBBB')
+
+#     pyplot.show()
+
+# '''t-SNE visualization '''
+# tsne = TSNE(n_components = 2 , random_state= 0)
+# Z = tsne.fit_transform(dfsvd[svdcols])
+# dftsne = pd.DataFrame(Z, columns=['x', 'y'], index= dfsvd.index)
+
+# dftsne['signal'] = Y_train
+
+# g = sns.lmplot('x', 'y', dftsne, hue='signal', fit_reg= False, size= 8, scatter_kws= {'alpha':0.7, 's':60})
+# g.axes.flat[0].set_title('Scatterplot of a Multiple Dimension Dataset reduced to 2D using t-SNE')
 # pyplot.show()
 
+''' Compare models ''' 
+scoring= 'accuracy'
 
-# ''' Backtest the data ''' 
-# backetestdata = pd.DataFrame(index=X_validation.index)
+import time 
+start_time = time.time()
 
-# backetestdata['signal_pred'] = predictions
-# backetestdata['signal_actual'] = Y_validation
-# backetestdata['Market Returns'] = X_validation['Close'].pct_change()
-# backetestdata['Actual Returns'] = backetestdata['Market Returns'] * backetestdata['signal_actual'].shift(1)
-# backetestdata['Strategy Returns'] = backetestdata['Market Returns'] * backetestdata['signal_pred'].shift(1)
-# backetestdata = backetestdata.reset_index()
-# print(backetestdata.head())
+kfold = KFold
 
-# pyplot.hist(backetestdata[['Strategy Returns', 'Actual Returns']].cumsum())
-# pyplot.plot(backetestdata[['Strategy Returns', 'Actual Returns']].cumsum())
+models = RandomForestClassifier(n_jobs= -1)
+cv_results_XTrain= cross_val_score(models, X_train, Y_train, scoring=scoring)
+print("Time Without Dimensionality Reduction--- %s seconds ---" % (time.time() - start_time))
 
-# pyplot.show()
+start_time = time.time()
+X_SVD = dfsvd[svdcols].iloc[:,:5]
+cv_results_SVD = cross_val_score(models, X_SVD, Y_train,  scoring=scoring)
+print("Time with Dimensionality Reduction --- %s ---" % (time.time() - start_time))
 
+print("Result without dimensionality Reduction: %f (%f)" % (cv_results_XTrain.mean(), cv_results_XTrain.std()))
+print("Result with dimensionality Reduction: %f (%f)" % (cv_results_SVD.mean(), cv_results_SVD.std()))
