@@ -1,11 +1,10 @@
 import pandas as pd 
 import pandas_datareader as dr
 
-index_url = "https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average"
+index_url = "https://en.wikipedia.org/wiki/FTSE_100_Index#Constituents_in_May_2021"
 data_table = pd.read_html(index_url)
 
-
-tickers = data_table[1]['Symbol'].tolist()
+tickers = data_table[3]['EPIC'].tolist()
 
 print(tickers)
 
@@ -25,7 +24,8 @@ prices_df.sort_index(inplace=True)
 
 print(prices_df)
 
-# prices_df.to_csv("dowjones_data.csv")
+# prices_df.to_csv("ftse10data.csv")
+
 
 
 

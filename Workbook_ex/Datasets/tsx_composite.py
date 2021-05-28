@@ -1,9 +1,8 @@
 import pandas as pd 
 import pandas_datareader as dr
 
-index_url = "https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average"
+index_url = "https://en.wikipedia.org/wiki/S%26P/TSX_Composite_Index#List_of_companies"
 data_table = pd.read_html(index_url)
-
 
 tickers = data_table[1]['Symbol'].tolist()
 
@@ -25,7 +24,9 @@ prices_df.sort_index(inplace=True)
 
 print(prices_df)
 
-# prices_df.to_csv("dowjones_data.csv")
+# prices_df.to_csv("tsxcomposite.csv")
+
+
 
 
 
