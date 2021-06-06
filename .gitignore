@@ -3154,3 +3154,8 @@ Workbook_ex/Datasets/sp500_data.csv
 Workbook_ex/Datasets/ProcessedData.xlsx
 Workbook_ex/Datasets/sp500_data_decade.csv
 Workbook_ex/Datasets/SP500.csv
+checkpoint
+model.ckpt.data-00000-of-00001
+model.ckpt.meta
+model.ckpt.index
+.gitignore

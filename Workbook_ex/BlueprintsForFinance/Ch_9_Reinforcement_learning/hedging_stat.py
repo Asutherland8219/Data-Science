@@ -61,7 +61,7 @@ class Agent(object):
     def __init__(self, time_steps, batch_size, features, nodes= [64, 46, 46, 1], name= 'model'):
         ops.reset_default_graph()
         self.batch_size = batch_size 
-        self.S_t_input = tf.placeholder(tf.float32, [time_steps, batch_size, features])
+        self.S_t_input = tf.input(tf.float32, [time_steps, batch_size, features])
         self.K = tf.placeholder(tf.float32, batch_size)
         self.alpha = tf.placeholder(tf.float32)
 
