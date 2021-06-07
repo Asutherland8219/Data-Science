@@ -240,5 +240,49 @@ plot_deltas(paths_test, deltas_bs, deltas_rnn)
 plot_strategy_pnl(portfolio_pnl_bs, portfolio_pnl_rnn)
 
 
+# changing Moneyness 
+with tf.Session() as sess:
+    model_1.restore(sess, 'model.ckpt')
+    test1_results = model_1.predict(paths_test, np.ones(paths_test.shape[1]) * (K-10), alpha, sess)
+
+_,_,_,portfolio_pnl_bs, deltas_bs = black_scholes_hedge_strategy(S_0, K-10, r, vol, T, paths_test, alpha, True)
+pyplot.figure()
+_,_,_,portfolio_pnl_rnn,deltas_rnn = test_hedging_strategy(test1_results[2], paths_test, K-10, 2.302974467802428, alpha, True)
+plot_deltas(paths_test, deltas_bs, deltas_rnn)
+plot_strategy_pnl(portfolio_pnl_bs, portfolio_pnl_rnn)
+
+# changing Drift 
+paths_test_drift = monte_carlo_paths(S_0, T, vol, 0.48 + r, seed_test, n_sims_test, timesteps)
+with tf.Session() as sess:
+    model_1.restore(sess, 'model.ckpt')
+    test1_results = model_1.predict(paths_test_drift, np.ones(paths_test_drift.shape[1]) * K, alpha, sess)
+
+_,_,_,portfolio_pnl_bs, deltas_bs = black_scholes_hedge_strategy(S_0, K, r, vol, T, paths_test_drift, alpha, True)
+pyplot.figure()
+_,_,_,portfolio_pnl_rnn,deltas_rnn = test_hedging_strategy(test1_results[2], paths_test_drift, K, 2.302974467802428, alpha, True)
+plot_deltas(paths_test, deltas_bs, deltas_rnn)
+plot_strategy_pnl(portfolio_pnl_bs, portfolio_pnl_rnn)
+
+# Shifted/changed volatitlity 
+paths_test_vol = monte_carlo_paths(S_0, T, vol + 0.05, r, seed_test, n_sims_test, timesteps)
+
+with tf.Session() as sess:
+    model_1.restore(sess, 'model.ckpt')
+    test1_results = model_1.predict(paths_test_vol, np.ones(paths_test_vol.shape[1]) * K, alpha, sess)
+
+_,_,_,portfolio_pnl_bs, deltas_bs = black_scholes_hedge_strategy(S_0, K, r, vol, T, paths_test_vol, alpha, True)
+pyplot.figure()
+_,_,_,portfolio_pnl_rnn,deltas_rnn = test_hedging_strategy(test1_results[2], paths_test_vol, K, 2.302974467802428, alpha, True)
+plot_deltas(paths_test_vol, deltas_bs, deltas_rnn)
+plot_strategy_pnl(portfolio_pnl_bs, portfolio_pnl_rnn)
+
+
+
+
+
+
+
+
+
 
 

@@ -3159,3 +3159,5 @@ model.ckpt.data-00000-of-00001
 model.ckpt.meta
 model.ckpt.index
 .gitignore
+Workbook_ex/Datasets/crypto_portfolio.csv
+Workbook_ex/Datasets/data.csv
