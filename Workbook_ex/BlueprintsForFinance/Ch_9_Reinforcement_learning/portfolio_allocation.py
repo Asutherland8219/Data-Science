@@ -1,7 +1,6 @@
 # Load libraries
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from pandas import read_csv, set_option
 from pandas.plotting import scatter_matrix
 import seaborn as sns
@@ -17,6 +16,7 @@ from keras.regularizers import l2
 
 import numpy as np
 import pandas as pd
+import matplotlib
 
 import random
 from collections import deque
@@ -269,7 +269,7 @@ for e in range(episode_count):
 
     print("Episode " + str(e) + "/" + str(episode_count), 'epsilon', agent.epsilon)
 
-    s = env.get_state(np.random.randint(window_size+1, data_length-window-1), window_size)
+    s = env.get_state(np.random.randint(window_size+1, data_length-window_size-1), window_size)
     total_profit = 0
 
     for t in range(window_size, data_length, rebalance_period):
@@ -280,9 +280,9 @@ for e in range(episode_count):
 
         actions_to_show.append(action[0])
 
-        weighted_returns, reward = env.get_reward(action[0], data1, t)
+        weighted_returns, reward = env.get_reward(action[0], date1, t)
         weighted_returns_equal, reward_equal = env.get_reward(
-            np.ones(agent.portfolio_size) / agent.portfolio_size, data1, t
+            np.ones(agent.portfolio_size) / agent.portfolio_size, date1, t
         )
 
         rewards_history.append(reward)
@@ -300,19 +300,115 @@ for e in range(episode_count):
         s = s_
 
     rl_result = np.array(returns_history).cumsum()
-    equal_result = np.arry(returns_history_equal).cumsum()
+    equal_result = np.array(returns_history_equal).cumsum()
 
     pyplot.figure(figsize=(12,1))
     pyplot.plot(rl_result, color = 'black', ls='-' )
     pyplot.plot(equal_result, color = 'grey', ls='--')
-    pyplot.show()
+    # pyplot.show()
 
     pyplot.figure(figsize=(12, 2))
     for a in actions_to_show:
-        pyplot.bar(np.arrange(N_ASSETS), a, color = 'grey', alpha = 0.25)
-        pyplot.xticks(np.arrange(N_ASSETS), env.data.columns, rotation='vertical')
+        pyplot.bar(np.arange(N_ASSETS), a, color = 'grey', alpha = 0.25)
+        pyplot.xticks(np.arange(N_ASSETS), env.data.columns, rotation='vertical')
 
-    pyplot.show()
+    # pyplot.show()
+
+''' Testing the Data ''' 
+agent.is_eval = True 
+actions_equal, actions_rl = [], []
+result_equal, result_rl = [] , []
+
+for t in range(window_size, len(env.data), rebalance_period):
+
+    date1 = t-rebalance_period
+    s_ = env.get_state(t, window_size)
+    action = agent.act(s_)
+
+    weighted_returns, reward = env.get_reward(action[0], date1, t)
+    weighted_returns_equal, reward_equal = env.get_reward(
+        np.ones(agent.portfolio_size) / agent.portfolio_size, date1, t
+    )
+
+    result_equal.append(weighted_returns_equal.tolist())
+    actions_equal.append(np.ones(agent.portfolio_size)/agent.portfolio_size)
+
+    result_rl.append(weighted_returns.tolist())
+    actions_rl.append(action[0])
+
+result_equal_vis = [item for sublist in result_equal for item in sublist]
+result_rl_vis = [item for sublist in result_rl for item in sublist]
+
+pyplot.figure()
+pyplot.plot(np.array(result_equal_vis).cumsum(), label='Benchmark', color= 'grey', ls = '--')
+pyplot.plot(np.array(result_rl_vis).cumsum(), label= 'Deep RL portfolio', color= 'black', ls = '-')
+# pyplot.show()
+
+current_cmap = matplotlib.cm.get_cmap()
+current_cmap.set_bad(color='red')
+
+N = len(np.array([item for sublist in result_equal for item in sublist]).cumsum())
+
+for i in range(0, len(actions_rl)):
+    current_range = np.arange(0, N)
+    current_ts = np.zeros(N)
+    current_ts2 = np.zeros(N)
+
+    ts_benchmark = np.array([item for sublist in result_equal[:i+1] for item in sublist]).cumsum()
+    ts_target = np.array([item for sublist in result_rl[:i+1] for item in sublist]).cumsum()
+
+    t = len(ts_benchmark)
+    current_ts[:t] = ts_benchmark[-1]
+    current_ts2[:t] = ts_target[-1]
+
+    pyplot.figure(figsize= (12, 10))
+
+    pyplot.subplot(2, 1, 1)
+    pyplot.bar(np.arange(N_ASSETS), actions_rl[i], color= 'grey')
+    pyplot.xticks(np.arange(N_ASSETS), env.data.columns, rotation='vertical')
+
+    pyplot.subplot(2, 1, 1)
+    pyplot.colormaps = current_cmap
+    pyplot.plot(current_range[:t], current_ts[:t], color= 'black', label = 'Benchmark')
+    pyplot.plot(current_range[:t], current_ts2[:t], color= 'red', label = 'Deep RL portfolio')
+    pyplot.plot(current_range[:t], current_ts[:t], color= '--', label = 'black')
+    pyplot.autoscale(False)
+    pyplot.ylim([-1, 1])
+    pyplot.legend()
+
+
+''' Compare and come up with a conclusion ''' 
+import statsmodels.api as sm
+from statsmodels import regression
+
+def sharpe(R):
+    r = np.diff(R)
+    sr = r.mean()/r.std() * np.sqrt(252)
+    return sr
+
+def print_stats(result, benchmark):
+
+    sharpe_ratio = sharpe(np.array(result).cumsum())
+    returns = np.mean(np.array(result))
+    volatility = np.std(np.array(result))
+
+    X = benchmark
+    y = result 
+    x = sm.add_constant(X)
+    model = regression.linear_model.OLS(y, x).fit()
+    alpha = model.params[0]
+    beta = model.params[0]
+
+    return np.round(np.array([returns, volatility, sharpe_ratio, alpha, beta]), 4).tolist()
+
+
+print('EQUAL', print_stats(result_equal_vis, result_equal_vis))
+print('RL AGENT', print_stats(result_rl_vis, result_equal_vis))
+
+
+
+
+
 
 
 
