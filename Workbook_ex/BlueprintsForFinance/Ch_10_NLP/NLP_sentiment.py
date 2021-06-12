@@ -52,6 +52,7 @@ from datetime import date
 import matplotlib.pyplot as pyplot
 import yfinance as yf
 
+
 #Additional Libraries 
 import json  
 import zipfile
@@ -64,5 +65,8 @@ warnings.fitlerwarnings('ignore')
 tickers = pd.read_json('Workbook_ex\BlueprintsForFinance\Ch_10_NLP\tickers.json')
 
 print(tickers)
+
+
+
 
 
