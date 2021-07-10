@@ -1,6 +1,5 @@
 '''Searches tweets, tallies postitive, neutral and negative sentiment'''
 import secrets
-import keys 
 import preprocessor as p
 import sys
 from textblob import TextBlob, sentiments
@@ -36,7 +35,7 @@ class SentimentListener(tweepy.StreamListener):
         
         blob = TextBlob(tweet_text)
         if blob.sentiment.polarity > 0:
-            setiment = '+'
+            sentiment = '+'
             self.sentiment_dict['positive'] += 1
         elif blob.sentiment.polarity == 0:
             sentiment = ' '
@@ -51,30 +50,29 @@ class SentimentListener(tweepy.StreamListener):
 
         #if limit is reached return false to stop streaming
         return self.tweet_count != self.TWEET_LIMIT
-    
-    def main():
-        auth = tweepy.OAuthHandler(secrets.apikey, secrets.api_s_key)
 
-        auth.set_access_token(secrets.access_token, secrets.access_token_secret)
+def main():
+    auth = tweepy.OAuthHandler(secrets.apikey, secrets.api_s_key)
 
-        api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+    auth.set_access_token(secrets.access_token, secrets.access_token_secret)
 
-        #Create the listener
-        search_key = sys.argv[1]
-        limit = int(sys.argv[2]) # how many tweets do we want?
-        sentiment_dict = {'positive': 0, 'neutral': 0, 'negative': 0}
-        sentiment_listener = SentimentListener(api, sentiment_dict, search_key, limit)
+    api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
-        stream = tweepy.Stream(auth=api.auth, listener=sentiment_listener)
+    #Create the listener
+    search_key = input("What are you looking for? ")
+    limit = int(input("How many tweets do you want?"))# how many tweets do we want?
+    sentiment_dict = {'positive': 0, 'neutral': 0, 'negative': 0}
+    sentiment_listener = SentimentListener(api, sentiment_dict, search_key, limit)
 
-        stream.filter(track=[search_key], languages=['en'], is_async=False)
+    stream = tweepy.Stream(auth=api.auth, listener=sentiment_listener)
 
-        print(f'Tweet sentiment for "{search_key}"')
-        print('Positive:', sentiment_dict['positive'])
-        print(' Neutral:', sentiment_dict['neutral'])
-        print('Negative:', sentiment_dict['negative'])
+    stream.filter(track=[search_key], languages=['en'], is_async=False)
+
+    print(f'Tweet sentiment for "{search_key}"')
+    print('Positive:', sentiment_dict['positive'])
+    print(' Neutral:', sentiment_dict['neutral'])
+    print('Negative:', sentiment_dict['negative'])
 
 
-    if __name__ == '__main__':
-        main()
-
+if __name__ == '__main__':
+    main()
