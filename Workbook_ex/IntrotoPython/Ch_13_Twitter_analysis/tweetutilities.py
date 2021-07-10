@@ -1,5 +1,9 @@
 from geopy import OpenMapQuest
 import mapquest_secrets
+import time
+import tweepy
+import secrets
+
 def get_tweet_content(tweet, location=False):
     """Return a tweet dictionary"""
     fields = {}
@@ -42,5 +46,14 @@ def get_geocodes(tweet_list):
                 bad_locations += 1 #invalid location
     print('Done Geocoding')
     return bad_locations
-    
+
+def get_API():
+    auth = tweepy.OAuthHandler(secrets.apikey, secrets.api_s_key)
+
+    auth.set_access_token(secrets.access_token, secrets.access_token_secret)
+
+    api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+
+    return api
+
 
