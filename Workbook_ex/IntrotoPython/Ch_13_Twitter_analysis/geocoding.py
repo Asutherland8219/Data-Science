@@ -7,7 +7,7 @@ from locationlistener import LocationListener
 import tweepy
 
 
-query = 'Pizza'
+query = 'euro2020'
 amt = int(input('How many?'))
 api = get_API()
 
@@ -41,4 +41,4 @@ for t in df.itertuples():
     marker = folium.Marker((t.latitude, t.longitude), popup=popup)
     marker.add_to(worldmap)
 
-worldmap.save('tweet_map.html')
+worldmap.save('tweet_map_england.html')

@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_57173f079cc64ad9a6bd8861e90bbb05 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_57173f079cc64ad9a6bd8861e90bbb05" ></div>
+        
+</body>
+<script>    
+    
+            var map_57173f079cc64ad9a6bd8861e90bbb05 = L.map(
+                "map_57173f079cc64ad9a6bd8861e90bbb05",
+                {
+                    center: [0, 0],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 1,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_c643c06302e04de982e81e9a9c3c9be1 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+            var marker_b490a0c67cfd401190c1ae9c197a5de4 = L.marker(
+                [51.5073219, -0.1276474],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_28fc698c278d4ac3a8ac6be2bc95b883 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_54eb19e9869b40ffbb69b9d7980cca0b = $(`<div id="html_54eb19e9869b40ffbb69b9d7980cca0b" style="width: 100.0%; height: 100.0%;">DexterUnique: Work hard play hard. After a very busy night with #EURO2020 final, I&#39;m enjoying my Monday with a feast of grass and… https://t.co/Zgj3B78Toa</div>`)[0];
+            popup_28fc698c278d4ac3a8ac6be2bc95b883.setContent(html_54eb19e9869b40ffbb69b9d7980cca0b);
+        
+
+        marker_b490a0c67cfd401190c1ae9c197a5de4.bindPopup(popup_28fc698c278d4ac3a8ac6be2bc95b883)
+        ;
+
+        
+    
+    
+            var marker_859e08cdc4284e6293c207a6eb893ec2 = L.marker(
+                [55.947877, -4.7591972],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_4706e8a68d8b42d380a18eb64fa6cd2d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_7babbe6318014c3aa35e2211df484483 = $(`<div id="html_7babbe6318014c3aa35e2211df484483" style="width: 100.0%; height: 100.0%;">GAMEGreenock: So, maybe the #Euro2020 didn’t go how you wanted, but with #FIFA22 announced, you’ll be able to show ‘how it should… https://t.co/j6sn8Tu4xC</div>`)[0];
+            popup_4706e8a68d8b42d380a18eb64fa6cd2d.setContent(html_7babbe6318014c3aa35e2211df484483);
+        
+
+        marker_859e08cdc4284e6293c207a6eb893ec2.bindPopup(popup_4706e8a68d8b42d380a18eb64fa6cd2d)
+        ;
+
+        
+    
+    
+            var marker_dcdfa5c5d4b4476696feb5a09ae26098 = L.marker(
+                [51.5073219, -0.1276474],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_713f7d79f663452699c0839300bd3b03 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_95916578275f49d2896b08e3f9714121 = $(`<div id="html_95916578275f49d2896b08e3f9714121" style="width: 100.0%; height: 100.0%;">JacobRanson27: West Ham&#39;s Declan Rice does England proud at Euro 2020.  #ENG #ITA #EURO2020 https://t.co/8H2eQ4KZ9H</div>`)[0];
+            popup_713f7d79f663452699c0839300bd3b03.setContent(html_95916578275f49d2896b08e3f9714121);
+        
+
+        marker_dcdfa5c5d4b4476696feb5a09ae26098.bindPopup(popup_713f7d79f663452699c0839300bd3b03)
+        ;
+
+        
+    
+    
+            var marker_dfa2c17bf04b447c8a20a6d624f62bca = L.marker(
+                [35.8885993, 14.4476911],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_f4224a78c7184a989d4f61dac81eaa29 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_7acb6e257d5644f8a2fc42135e28cb5e = $(`<div id="html_7acb6e257d5644f8a2fc42135e28cb5e" style="width: 100.0%; height: 100.0%;">RikiPalumbo: @markdennett86 @EURO2020 @azzurri Ohhhh the irony, go home and cry. Come back when you have 4WC and 2 EURO https://t.co/jN9ySolR1U</div>`)[0];
+            popup_f4224a78c7184a989d4f61dac81eaa29.setContent(html_7acb6e257d5644f8a2fc42135e28cb5e);
+        
+
+        marker_dfa2c17bf04b447c8a20a6d624f62bca.bindPopup(popup_f4224a78c7184a989d4f61dac81eaa29)
+        ;
+
+        
+    
+    
+            var marker_fd2959a9a2d0430c88a402f5a14d08b9 = L.marker(
+                [35.1739302, 33.364726],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_7065f6ebab2c4904a9c046ef15a637c2 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_bfbf82d2d8334b2f8bfa241ef80f7136 = $(`<div id="html_bfbf82d2d8334b2f8bfa241ef80f7136" style="width: 100.0%; height: 100.0%;">pslayer666: HEY U GUIZE, LOOK IT FLEW HOME!!!!  #ItsComingHome #ItsComingRome #Euro2020</div>`)[0];
+            popup_7065f6ebab2c4904a9c046ef15a637c2.setContent(html_bfbf82d2d8334b2f8bfa241ef80f7136);
+        
+
+        marker_fd2959a9a2d0430c88a402f5a14d08b9.bindPopup(popup_7065f6ebab2c4904a9c046ef15a637c2)
+        ;
+
+        
+    
+    
+            var marker_854d9928f0dd415f8193f8ae80df31c4 = L.marker(
+                [48.8566101, 2.3514992],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_4a7d855ffac6400e8e5b45d5b6d0b61b = L.popup({"maxWidth": "100%"});
+
+        
+            var html_c650bd8beb9643ef9dd4edd363165ae8 = $(`<div id="html_c650bd8beb9643ef9dd4edd363165ae8" style="width: 100.0%; height: 100.0%;">BlueDmon4: @Orangepulp24 @EURO2020 I love u</div>`)[0];
+            popup_4a7d855ffac6400e8e5b45d5b6d0b61b.setContent(html_c650bd8beb9643ef9dd4edd363165ae8);
+        
+
+        marker_854d9928f0dd415f8193f8ae80df31c4.bindPopup(popup_4a7d855ffac6400e8e5b45d5b6d0b61b)
+        ;
+
+        
+    
+    
+            var marker_1fc9ba8b86d0431589c4869338ca66c9 = L.marker(
+                [22.3511148, 78.6677428],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_0197103ef12f4cb0a4dd44e67d5187c6 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_994c29c5418644dba2dc31f557edb53c = $(`<div id="html_994c29c5418644dba2dc31f557edb53c" style="width: 100.0%; height: 100.0%;">j_jophin: @KP24 1. Boo-ing Other Nations National Anthem!🤦🏻‍♂️😡 2. Laser Light On To The Face Of Best GK In The #EURO2020… https://t.co/skTVlEKgni</div>`)[0];
+            popup_0197103ef12f4cb0a4dd44e67d5187c6.setContent(html_994c29c5418644dba2dc31f557edb53c);
+        
+
+        marker_1fc9ba8b86d0431589c4869338ca66c9.bindPopup(popup_0197103ef12f4cb0a4dd44e67d5187c6)
+        ;
+
+        
+    
+    
+            var marker_3c76850fef034f1c81b4bf8d6eb2275f = L.marker(
+                [39.7837304, -100.4458825],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_f2b862297d8f4981a66bd92c5f84c4e5 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_e69c4c090e174b5a9537c0d5686f88b5 = $(`<div id="html_e69c4c090e174b5a9537c0d5686f88b5" style="width: 100.0%; height: 100.0%;">haziqez: #smartselamanyaolele number 3! Still in top 3 after all ahaks! Good game well played yalls! #EURO2020 💯🔥  1)… https://t.co/IJtyjJRNBA</div>`)[0];
+            popup_f2b862297d8f4981a66bd92c5f84c4e5.setContent(html_e69c4c090e174b5a9537c0d5686f88b5);
+        
+
+        marker_3c76850fef034f1c81b4bf8d6eb2275f.bindPopup(popup_f2b862297d8f4981a66bd92c5f84c4e5)
+        ;
+
+        
+    
+    
+            var marker_1075bfaad60d43f885e12c43f4965144 = L.marker(
+                [25.5760154, 91.8828027],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_5d541a6baff540f2b1a6f9547b63a9d2 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_9bd366797b314ad6b614676029489986 = $(`<div id="html_9bd366797b314ad6b614676029489986" style="width: 100.0%; height: 100.0%;">RianNovice: @mitro2020 @DrCool79850173 @goal @Pedri @Cristiano @FIFAcom @EURO2020 If messi has 7 goals from 4 games and Neymar… https://t.co/TXTpvpW3Us</div>`)[0];
+            popup_5d541a6baff540f2b1a6f9547b63a9d2.setContent(html_9bd366797b314ad6b614676029489986);
+        
+
+        marker_1075bfaad60d43f885e12c43f4965144.bindPopup(popup_5d541a6baff540f2b1a6f9547b63a9d2)
+        ;
+
+        
+    
+    
+            var marker_6ccc5ec17739451cb9f9e21df41becef = L.marker(
+                [52.2854208, -106.65303],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_f985e25111bc4ebb888c8ccb8e0ee6df = L.popup({"maxWidth": "100%"});
+
+        
+            var html_625382999d644b7bb65707ad2541eabe = $(`<div id="html_625382999d644b7bb65707ad2541eabe" style="width: 100.0%; height: 100.0%;">equitysport: We too are appalled by the deluge of racist abuse following last nights #EURO2020  final.  We fully endorse and sup… https://t.co/0BvgQUrcQg</div>`)[0];
+            popup_f985e25111bc4ebb888c8ccb8e0ee6df.setContent(html_625382999d644b7bb65707ad2541eabe);
+        
+
+        marker_6ccc5ec17739451cb9f9e21df41becef.bindPopup(popup_f985e25111bc4ebb888c8ccb8e0ee6df)
+        ;
+
+        
+    
+    
+            var marker_ff88b77e3d364fec86695c28a606e623 = L.marker(
+                [22.3511148, 78.6677428],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_9c0db9475dd94a19b71f68831141de72 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ed83a9fdca474c70bae102820c27ceae = $(`<div id="html_ed83a9fdca474c70bae102820c27ceae" style="width: 100.0%; height: 100.0%;">j_jophin: 1. Boo-ing Other Nations National Anthem!🤦🏻‍♂️😡 2. Laser Light On To The Face Of Best GK In The #EURO2020 🤦🏻‍♂️😡 3.… https://t.co/F0Ort5BSM4</div>`)[0];
+            popup_9c0db9475dd94a19b71f68831141de72.setContent(html_ed83a9fdca474c70bae102820c27ceae);
+        
+
+        marker_ff88b77e3d364fec86695c28a606e623.bindPopup(popup_9c0db9475dd94a19b71f68831141de72)
+        ;
+
+        
+    
+    
+            var marker_479eed4dad45478a970d7358070496bd = L.marker(
+                [37.9321234, 23.71026],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_0cc13864deca4d29b64b3766cf2da86d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ecb0955565914a3d96c8aae8d587da5b = $(`<div id="html_ecb0955565914a3d96c8aae8d587da5b" style="width: 100.0%; height: 100.0%;">atombombbaby420: My only criticisms of @England &amp;amp; Southgate over entire #EURO2020 We were too Defensive (shouldn&#39;t need to play 2 de… https://t.co/mNOUkUiVuD</div>`)[0];
+            popup_0cc13864deca4d29b64b3766cf2da86d.setContent(html_ecb0955565914a3d96c8aae8d587da5b);
+        
+
+        marker_479eed4dad45478a970d7358070496bd.bindPopup(popup_0cc13864deca4d29b64b3766cf2da86d)
+        ;
+
+        
+    
+    
+            var marker_fffb074f7b2e4366a70bf76569b96ed0 = L.marker(
+                [22.3511148, 78.6677428],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_3b027b650a8a4ae6bbab1e3fa43c61ff = L.popup({"maxWidth": "100%"});
+
+        
+            var html_6ec43aeebfc941c49382564dbeaca6dc = $(`<div id="html_6ec43aeebfc941c49382564dbeaca6dc" style="width: 100.0%; height: 100.0%;">sanss2021: @abumetha @FIFAcom @EURO2020 @CopaAmerica @IndianFootball @bhaichung15 @ChampionsLeague @UEFAcom @premierleague… https://t.co/bsyWtaReRF</div>`)[0];
+            popup_3b027b650a8a4ae6bbab1e3fa43c61ff.setContent(html_6ec43aeebfc941c49382564dbeaca6dc);
+        
+
+        marker_fffb074f7b2e4366a70bf76569b96ed0.bindPopup(popup_3b027b650a8a4ae6bbab1e3fa43c61ff)
+        ;
+
+        
+    
+    
+            var marker_45ea74878c7b48509ddb2a15dbee8e90 = L.marker(
+                [25.2232283, 55.1594933008754],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_a252e2d56dee4eb690931d2c3da20592 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_63ffd47b63184bd9889f15761a9fcbe9 = $(`<div id="html_63ffd47b63184bd9889f15761a9fcbe9" style="width: 100.0%; height: 100.0%;">india_weekly: Italy beat England 3-2 in penalties to lift #Euro after 53 years #Euro2020 #ItalyVsEngFinal  https://t.co/0hZa4GZhU6</div>`)[0];
+            popup_a252e2d56dee4eb690931d2c3da20592.setContent(html_63ffd47b63184bd9889f15761a9fcbe9);
+        
+
+        marker_45ea74878c7b48509ddb2a15dbee8e90.bindPopup(popup_a252e2d56dee4eb690931d2c3da20592)
+        ;
+
+        
+    
+    
+            var marker_f64e81d88c9c4ec08798457e35d5bb95 = L.marker(
+                [0.0611715, 32.4698564],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_61847441df234542b9c78738ae6ed6fb = L.popup({"maxWidth": "100%"});
+
+        
+            var html_e168ca1a39f842108836958e730957a0 = $(`<div id="html_e168ca1a39f842108836958e730957a0" style="width: 100.0%; height: 100.0%;">ARNOLDDREWRONA1: #Saka how can u even 🙄 #ItalyEngland #Euro2020Final https://t.co/Y2GI3NfD2R</div>`)[0];
+            popup_61847441df234542b9c78738ae6ed6fb.setContent(html_e168ca1a39f842108836958e730957a0);
+        
+
+        marker_f64e81d88c9c4ec08798457e35d5bb95.bindPopup(popup_61847441df234542b9c78738ae6ed6fb)
+        ;
+
+        
+    
+    
+            var marker_59863568784b49c2916304e469a34452 = L.marker(
+                [21.63982005, -157.920310199374],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_f865e871cb454e5b9c08c25ac9cc326b = L.popup({"maxWidth": "100%"});
+
+        
+            var html_d08820af291d4b0596bddea23145c91a = $(`<div id="html_d08820af291d4b0596bddea23145c91a" style="width: 100.0%; height: 100.0%;">hermanziegerman: @MrsMc67 @prodnose @GarethSouthgate @EURO2020 Beaten by the best team in the tournament and only 2 pens away from winning it</div>`)[0];
+            popup_f865e871cb454e5b9c08c25ac9cc326b.setContent(html_d08820af291d4b0596bddea23145c91a);
+        
+
+        marker_59863568784b49c2916304e469a34452.bindPopup(popup_f865e871cb454e5b9c08c25ac9cc326b)
+        ;
+
+        
+    
+    
+            var marker_d82918af65cb4202a748c059b7ffa8e9 = L.marker(
+                [51.4816546, -3.1791934],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_0e0867faaed74ae59fd512e96389f0a3 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a184c0266074494c944f1e2b84fd606b = $(`<div id="html_a184c0266074494c944f1e2b84fd606b" style="width: 100.0%; height: 100.0%;">RhodriCharles: @PencilCraftsman @RedWallSwapShop @Euro2020swaps I need 2,30,35,36,45,51,53,101,110,112,136,167,189,263,277,287,303… https://t.co/VgTSErz4RB</div>`)[0];
+            popup_0e0867faaed74ae59fd512e96389f0a3.setContent(html_a184c0266074494c944f1e2b84fd606b);
+        
+
+        marker_d82918af65cb4202a748c059b7ffa8e9.bindPopup(popup_0e0867faaed74ae59fd512e96389f0a3)
+        ;
+
+        
+    
+    
+            var marker_d89e34b511b240a08c43cc994df6b822 = L.marker(
+                [45.949377, -66.0721489],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_c72c7549de4d4bd39658b0384d855ebb = L.popup({"maxWidth": "100%"});
+
+        
+            var html_273e14b46c4941578e732befe5582dde = $(`<div id="html_273e14b46c4941578e732befe5582dde" style="width: 100.0%; height: 100.0%;">federica_dalba: Hope @Louis_Tomlinson is doing alright!💙 ciao amïo😁 #Euro2020Final #EURO2020 #Euro2021 #LouisTomlinson</div>`)[0];
+            popup_c72c7549de4d4bd39658b0384d855ebb.setContent(html_273e14b46c4941578e732befe5582dde);
+        
+
+        marker_d89e34b511b240a08c43cc994df6b822.bindPopup(popup_c72c7549de4d4bd39658b0384d855ebb)
+        ;
+
+        
+    
+    
+            var marker_4c50c43068c64a918c3690c1cd26df7c = L.marker(
+                [42.9632405, -85.6678639],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_baa7a18063ca44639f21e616bbd04c6c = L.popup({"maxWidth": "100%"});
+
+        
+            var html_699f430bef4947c89fb4070bb2da14b1 = $(`<div id="html_699f430bef4947c89fb4070bb2da14b1" style="width: 100.0%; height: 100.0%;">WOODTV: The #EURO2020 champs arrived home at dawn to the ecstatic cheers of Italians who spent the better part of the night… https://t.co/KhLE4FB1sn</div>`)[0];
+            popup_baa7a18063ca44639f21e616bbd04c6c.setContent(html_699f430bef4947c89fb4070bb2da14b1);
+        
+
+        marker_4c50c43068c64a918c3690c1cd26df7c.bindPopup(popup_baa7a18063ca44639f21e616bbd04c6c)
+        ;
+
+        
+    
+    
+            var marker_e55b0e5b78074783aafc55407748058a = L.marker(
+                [16.3700359, -2.2900239],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_5710c8082e5140949d4196304e81c318 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_32468e4105d940788571424718392e75 = $(`<div id="html_32468e4105d940788571424718392e75" style="width: 100.0%; height: 100.0%;">mirbrandnew: @KComani @ximena35336259 @EURO2020 2 billion people as a whole as well. These stan accounts really think football n… https://t.co/S0JoBRHt1J</div>`)[0];
+            popup_5710c8082e5140949d4196304e81c318.setContent(html_32468e4105d940788571424718392e75);
+        
+
+        marker_e55b0e5b78074783aafc55407748058a.bindPopup(popup_5710c8082e5140949d4196304e81c318)
+        ;
+
+        
+    
+    
+            var marker_cfc8836b2b984d3fb93cb8df5f34296a = L.marker(
+                [51.5073219, -0.1276474],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_ec0c8191b6d54ec3a0ff35c1e3deab4c = L.popup({"maxWidth": "100%"});
+
+        
+            var html_b5584a7dc38f44e799d0c5b9ee68af79 = $(`<div id="html_b5584a7dc38f44e799d0c5b9ee68af79" style="width: 100.0%; height: 100.0%;">EveningStandard: .@England have given us reason to dream during a time of great difficulty #Euro2020 https://t.co/tHbmogUi7I</div>`)[0];
+            popup_ec0c8191b6d54ec3a0ff35c1e3deab4c.setContent(html_b5584a7dc38f44e799d0c5b9ee68af79);
+        
+
+        marker_cfc8836b2b984d3fb93cb8df5f34296a.bindPopup(popup_ec0c8191b6d54ec3a0ff35c1e3deab4c)
+        ;
+
+        
+    
+    
+            var marker_d2b52707ff3c42b6aac2cf058605feea = L.marker(
+                [44.05355465, -123.10528531751],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_15d88373e38c43ac89e71c47254bfeb5 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_bd7bf451d0cf48028192c3ac1804bc17 = $(`<div id="html_bd7bf451d0cf48028192c3ac1804bc17" style="width: 100.0%; height: 100.0%;">BeeBin_21: #Eng lost the #EURO2020  #hatewontwin #StopOnlineAbuse #stopracism  There were many tweets of anger,sadness and pra… https://t.co/NXYTKxvuF5</div>`)[0];
+            popup_15d88373e38c43ac89e71c47254bfeb5.setContent(html_bd7bf451d0cf48028192c3ac1804bc17);
+        
+
+        marker_d2b52707ff3c42b6aac2cf058605feea.bindPopup(popup_15d88373e38c43ac89e71c47254bfeb5)
+        ;
+
+        
+    
+    
+            var marker_1a889855ae6a4f9fa2dfa2404227ff99 = L.marker(
+                [30.2711286, -97.7436995],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_14cbefa48e9544918383a56a8f0e83c7 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_3e4d3d33617d4f73a40ed9539aabba11 = $(`<div id="html_3e4d3d33617d4f73a40ed9539aabba11" style="width: 100.0%; height: 100.0%;">vincent404: Some final thoughts on #euro2020 1. UEFA showed where they stand on LGBTQA+ matters with their decision in the Germ… https://t.co/e5DYUKVMT8</div>`)[0];
+            popup_14cbefa48e9544918383a56a8f0e83c7.setContent(html_3e4d3d33617d4f73a40ed9539aabba11);
+        
+
+        marker_1a889855ae6a4f9fa2dfa2404227ff99.bindPopup(popup_14cbefa48e9544918383a56a8f0e83c7)
+        ;
+
+        
+    
+    
+            var marker_bad4a34609b14098a865563f8c67634c = L.marker(
+                [22.350627, 114.1849161],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_c09c862d18c8483c84decd57584ee581 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_6e7af90c4ef848259b0f4047ab896c4a = $(`<div id="html_6e7af90c4ef848259b0f4047ab896c4a" style="width: 100.0%; height: 100.0%;">alexchu414: #Euro2020Final #SayNoToRacism @1Xtra Just ENDLESS RACISM. Without Black players, England couldn&#39;t even get into fin… https://t.co/ZrSdhXwWtW</div>`)[0];
+            popup_c09c862d18c8483c84decd57584ee581.setContent(html_6e7af90c4ef848259b0f4047ab896c4a);
+        
+
+        marker_bad4a34609b14098a865563f8c67634c.bindPopup(popup_c09c862d18c8483c84decd57584ee581)
+        ;
+
+        
+    
+    
+            var marker_d631efbb8c4846238495b2f3ca7d929f = L.marker(
+                [51.2540853, -0.3286267],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_bc3abcbe96c74c78ac961eaae67646c9 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_48dcbc5ce6c64f35a5708b4365999970 = $(`<div id="html_48dcbc5ce6c64f35a5708b4365999970" style="width: 100.0%; height: 100.0%;">Sarryb78: How about a thread about what positives we can take from #EURO2020 ? I&#39;ll start us off!  1/ what about those penalt… https://t.co/NvT2sIbNMT</div>`)[0];
+            popup_bc3abcbe96c74c78ac961eaae67646c9.setContent(html_48dcbc5ce6c64f35a5708b4365999970);
+        
+
+        marker_d631efbb8c4846238495b2f3ca7d929f.bindPopup(popup_bc3abcbe96c74c78ac961eaae67646c9)
+        ;
+
+        
+    
+    
+            var marker_5fe363d827e64bfcbcd2f60aafd85782 = L.marker(
+                [51.5073219, -0.1276474],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_3929645f85dd4f3892a4ae237a4f8654 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_2a0b22e97af14954851fa59cd6628d82 = $(`<div id="html_2a0b22e97af14954851fa59cd6628d82" style="width: 100.0%; height: 100.0%;">AlphaMind101: 5 players missed penalties in last night’s #Euro2020Final. 3 will be struggling this morning, but for 2 of them it’… https://t.co/2GymDC0mWg</div>`)[0];
+            popup_3929645f85dd4f3892a4ae237a4f8654.setContent(html_2a0b22e97af14954851fa59cd6628d82);
+        
+
+        marker_5fe363d827e64bfcbcd2f60aafd85782.bindPopup(popup_3929645f85dd4f3892a4ae237a4f8654)
+        ;
+
+        
+    
+    
+            var marker_65f548a285f44fbd9910e632f3edf917 = L.marker(
+                [50.1106444, 8.6820917],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_cdab6252e6c249ed826bdafe9c0f4e31 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_47ecdf969d0b4aa88e76a837e2d3e7f2 = $(`<div id="html_47ecdf969d0b4aa88e76a837e2d3e7f2" style="width: 100.0%; height: 100.0%;">eintracht_stats: 🦅 #EURO2020-Adler: Einsätze/Minuten| @EURO2020 Eagles: games/minutes 🦅  Hinti       #AUT🏟️4⃣ 390min Zuber      #SUI… https://t.co/Z5jZh0N3do</div>`)[0];
+            popup_cdab6252e6c249ed826bdafe9c0f4e31.setContent(html_47ecdf969d0b4aa88e76a837e2d3e7f2);
+        
+
+        marker_65f548a285f44fbd9910e632f3edf917.bindPopup(popup_cdab6252e6c249ed826bdafe9c0f4e31)
+        ;
+
+        
+    
+    
+            var marker_c07fb34302fd46baa1ab3f5331785e7a = L.marker(
+                [16.3700359, -2.2900239],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_c812469131fc48f6845820a049987cf1 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_d9dea768bafa4f248083e12d54f2beb9 = $(`<div id="html_d9dea768bafa4f248083e12d54f2beb9" style="width: 100.0%; height: 100.0%;">mirbrandnew: @RossBTs7 @EURO2020 football is watched by 2 billion people stfu</div>`)[0];
+            popup_c812469131fc48f6845820a049987cf1.setContent(html_d9dea768bafa4f248083e12d54f2beb9);
+        
+
+        marker_c07fb34302fd46baa1ab3f5331785e7a.bindPopup(popup_c812469131fc48f6845820a049987cf1)
+        ;
+
+        
+    
+    
+            var marker_e6bec6f5cdea47aabe45377208deea15 = L.marker(
+                [41.8755546, -87.6244212],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_7ed883fc18064606926103b22be04f56 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_9a932fc40ab04d23a7d82dd502851fb2 = $(`<div id="html_9a932fc40ab04d23a7d82dd502851fb2" style="width: 100.0%; height: 100.0%;">WorldNBC1: #Italy crowned European champions after shootout win over #England #EURO2020finals   Italy won the European Champio… https://t.co/cQxFvEEtop</div>`)[0];
+            popup_7ed883fc18064606926103b22be04f56.setContent(html_9a932fc40ab04d23a7d82dd502851fb2);
+        
+
+        marker_e6bec6f5cdea47aabe45377208deea15.bindPopup(popup_7ed883fc18064606926103b22be04f56)
+        ;
+
+        
+    
+    
+            var marker_3ccc9857f27d40739694a4c4d023fd31 = L.marker(
+                [54.7023545, -3.2765753],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_4eda374ac38e487886f6327339f931d0 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ff287eddcde347b0ad08bf4c3bb57a07 = $(`<div id="html_ff287eddcde347b0ad08bf4c3bb57a07" style="width: 100.0%; height: 100.0%;">sbk: 👋 #EURO2020 is in the past!  👀 Looking to the future, we have #ENG at 39/5 to win #WorldCup2022.  🏆 Newly-crowned c… https://t.co/sWrYhqWYjX</div>`)[0];
+            popup_4eda374ac38e487886f6327339f931d0.setContent(html_ff287eddcde347b0ad08bf4c3bb57a07);
+        
+
+        marker_3ccc9857f27d40739694a4c4d023fd31.bindPopup(popup_4eda374ac38e487886f6327339f931d0)
+        ;
+
+        
+    
+    
+            var marker_228e5cd643084413b39309689c6f38d9 = L.marker(
+                [31.5195822, 74.326297],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_0242e37ded1f40bd8d29cc9c791778f1 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a635cfbceacc49aaafa09d3c481d9fc6 = $(`<div id="html_a635cfbceacc49aaafa09d3c481d9fc6" style="width: 100.0%; height: 100.0%;">TheSStudiobySA: House Full @ TSS. 💯Here&#39;s to a fun-filled night of the #livescreening of #euro2020⚽ FINAL. 🤾‍♂️Special thanks to ev… https://t.co/QbiKrVHz2h</div>`)[0];
+            popup_0242e37ded1f40bd8d29cc9c791778f1.setContent(html_a635cfbceacc49aaafa09d3c481d9fc6);
+        
+
+        marker_228e5cd643084413b39309689c6f38d9.bindPopup(popup_0242e37ded1f40bd8d29cc9c791778f1)
+        ;
+
+        
+    
+    
+            var marker_d42a802e0e58439ca591f3d43cd67b6b = L.marker(
+                [42.6384261, 12.674297],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_756cf143c9d74b099e89a004cdda25e2 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a53041fe08804b2f83959c5bb375af33 = $(`<div id="html_a53041fe08804b2f83959c5bb375af33" style="width: 100.0%; height: 100.0%;">CRobbiano: Lesson n. 2 : latin for English  #ItsComingRome #ItalyEngland #EURO2020  #itsnotcominghome https://t.co/jJlwjia09m</div>`)[0];
+            popup_756cf143c9d74b099e89a004cdda25e2.setContent(html_a53041fe08804b2f83959c5bb375af33);
+        
+
+        marker_d42a802e0e58439ca591f3d43cd67b6b.bindPopup(popup_756cf143c9d74b099e89a004cdda25e2)
+        ;
+
+        
+    
+    
+            var marker_5df73f93e6544bdbb90e8ef808baef49 = L.marker(
+                [55.856656, -4.2435817],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_07dfbb08a67244ea8bbbf28216147d45 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f233156e04c54d7286ee9c670b11e709 = $(`<div id="html_f233156e04c54d7286ee9c670b11e709" style="width: 100.0%; height: 100.0%;">NEMcEwan: @billykayscot Not to worry….. While we may not have made it out of the group stage  of @EURO2020  at least under… https://t.co/N2xvwlocQT</div>`)[0];
+            popup_07dfbb08a67244ea8bbbf28216147d45.setContent(html_f233156e04c54d7286ee9c670b11e709);
+        
+
+        marker_5df73f93e6544bdbb90e8ef808baef49.bindPopup(popup_07dfbb08a67244ea8bbbf28216147d45)
+        ;
+
+        
+    
+    
+            var marker_d7d6a44cef77495fb6af5f234191add1 = L.marker(
+                [51.5073219, -0.1276474],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_56333ceb59b14780b27114856ccd334e = L.popup({"maxWidth": "100%"});
+
+        
+            var html_9ac59e3fe48142b5ad756e53bb1ba18f = $(`<div id="html_9ac59e3fe48142b5ad756e53bb1ba18f" style="width: 100.0%; height: 100.0%;">cumalimidem: @EURO2020 COUL’DT U FIND A BETTER REFERE FOR  THE FINAL GAME INSTEAD OF THAT OLD MAN !</div>`)[0];
+            popup_56333ceb59b14780b27114856ccd334e.setContent(html_9ac59e3fe48142b5ad756e53bb1ba18f);
+        
+
+        marker_d7d6a44cef77495fb6af5f234191add1.bindPopup(popup_56333ceb59b14780b27114856ccd334e)
+        ;
+
+        
+    
+    
+            var marker_eba7a01d10454579a481958f7d4e8664 = L.marker(
+                [39.7837304, -100.4458825],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_3c51433f146040c9be9a0d54af526675 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_e0158d505b054afb8737ca50f3dd0405 = $(`<div id="html_e0158d505b054afb8737ca50f3dd0405" style="width: 100.0%; height: 100.0%;">Zaga_daga: 2) Hot take 2 #EURO2020  England fans you can lose without trashing London and hit people, you still did great eh.… https://t.co/1HJH3tQvCh</div>`)[0];
+            popup_3c51433f146040c9be9a0d54af526675.setContent(html_e0158d505b054afb8737ca50f3dd0405);
+        
+
+        marker_eba7a01d10454579a481958f7d4e8664.bindPopup(popup_3c51433f146040c9be9a0d54af526675)
+        ;
+
+        
+    
+    
+            var marker_5ba114e8700c417794620035b3bca927 = L.marker(
+                [28.6141793, 77.2022662],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_4afda3658a10488195a7633cd8194c54 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_393db969b1804b43855e77f044e0e94c = $(`<div id="html_393db969b1804b43855e77f044e0e94c" style="width: 100.0%; height: 100.0%;">IExpressSports: #EURO2020  The finalists drew 1-1 after extra time and #ITA won the shootout 3-2, with #ENG players Marcus Rashford… https://t.co/Zoe8UKHKEl</div>`)[0];
+            popup_4afda3658a10488195a7633cd8194c54.setContent(html_393db969b1804b43855e77f044e0e94c);
+        
+
+        marker_5ba114e8700c417794620035b3bca927.bindPopup(popup_4afda3658a10488195a7633cd8194c54)
+        ;
+
+        
+    
+    
+            var marker_062cd4ef51954265a42ff68b1d0ea6cc = L.marker(
+                [51.5073219, -0.1276474],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_56881ae106be456cb6a2f47fc0e504b4 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_b4eb04f58d9b421382a2dc792dbaca31 = $(`<div id="html_b4eb04f58d9b421382a2dc792dbaca31" style="width: 100.0%; height: 100.0%;">EveningStandard: Thousands of people have shared the employee&#39;s LinkedIn page and called for Savills to take action #Euro2020 https://t.co/eYutUssLuq</div>`)[0];
+            popup_56881ae106be456cb6a2f47fc0e504b4.setContent(html_b4eb04f58d9b421382a2dc792dbaca31);
+        
+
+        marker_062cd4ef51954265a42ff68b1d0ea6cc.bindPopup(popup_56881ae106be456cb6a2f47fc0e504b4)
+        ;
+
+        
+    
+    
+            var marker_7281f695d42b47f69874b4f00aecf1a6 = L.marker(
+                [51.0, 10.0],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_279efd3b0a90495bb8f93ce4a8024d52 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_49b1d571670c4ede94acd0fe1d8d31b9 = $(`<div id="html_49b1d571670c4ede94acd0fe1d8d31b9" style="width: 100.0%; height: 100.0%;">WonkMag: Ever wanted a reception at Palazzo Chigi in Rome, that&#39;s easy. Just win the #EURO2020 . The Italian national team t… https://t.co/TnNSyYdbeL</div>`)[0];
+            popup_279efd3b0a90495bb8f93ce4a8024d52.setContent(html_49b1d571670c4ede94acd0fe1d8d31b9);
+        
+
+        marker_7281f695d42b47f69874b4f00aecf1a6.bindPopup(popup_279efd3b0a90495bb8f93ce4a8024d52)
+        ;
+
+        
+    
+    
+            var marker_aa55458dd8dd47c0b428ce34a2693b61 = L.marker(
+                [53.3806626, -1.4702278],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_d0dbd1aef50e49d8b84a8b82479a39c9 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_97940284e7024484bf3dabeeb88bf27b = $(`<div id="html_97940284e7024484bf3dabeeb88bf27b" style="width: 100.0%; height: 100.0%;">VictorClemmy: @rahulmsd_91 @EURO2020 @azzurri u must be a good author</div>`)[0];
+            popup_d0dbd1aef50e49d8b84a8b82479a39c9.setContent(html_97940284e7024484bf3dabeeb88bf27b);
+        
+
+        marker_aa55458dd8dd47c0b428ce34a2693b61.bindPopup(popup_d0dbd1aef50e49d8b84a8b82479a39c9)
+        ;
+
+        
+    
+    
+            var marker_c434a6629b5748b08c9f4b12b5dc3dd6 = L.marker(
+                [-4.7993356, 114.5632032],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_851727c1ee40458e815fabaaf679b1d4 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_20de6f6278374bafaeea7ee929f284ed = $(`<div id="html_20de6f6278374bafaeea7ee929f284ed" style="width: 100.0%; height: 100.0%;">des__cribe: Surely scoring a goal less than 2 minutes into the #EURO2020 final is the best birthday present for him, right?  Oh… https://t.co/Qb5HqoXWH3</div>`)[0];
+            popup_851727c1ee40458e815fabaaf679b1d4.setContent(html_20de6f6278374bafaeea7ee929f284ed);
+        
+
+        marker_c434a6629b5748b08c9f4b12b5dc3dd6.bindPopup(popup_851727c1ee40458e815fabaaf679b1d4)
+        ;
+
+        
+    
+    
+            var marker_e5c36f6843544171806143f0b1f03627 = L.marker(
+                [51.5073219, -0.1276474],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_a47961e8fc6f42f980deb9e8f2201e6d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_1a16bfe6e19549749945ea77abac2b8c = $(`<div id="html_1a16bfe6e19549749945ea77abac2b8c" style="width: 100.0%; height: 100.0%;">FatehaaBegumm: I’m not crying you are…🥺🥺🥺🥺🥺🥺😭💔… o saka if only you knew how amazing you played!!!!!!! #StopHate #Euro2020… https://t.co/IvQxsjinoQ</div>`)[0];
+            popup_a47961e8fc6f42f980deb9e8f2201e6d.setContent(html_1a16bfe6e19549749945ea77abac2b8c);
+        
+
+        marker_e5c36f6843544171806143f0b1f03627.bindPopup(popup_a47961e8fc6f42f980deb9e8f2201e6d)
+        ;
+
+        
+    
+    
+            var marker_6bfce55f9ecd4e1da0114f44749f9337 = L.marker(
+                [40.7696272, 44.6736646],
+                {}
+            ).addTo(map_57173f079cc64ad9a6bd8861e90bbb05);
+        
+    
+        var popup_6c3e9f9e61a3461e9c593aaa0b8ac981 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_c93034a3a1624182aee60c20c94555f1 = $(`<div id="html_c93034a3a1624182aee60c20c94555f1" style="width: 100.0%; height: 100.0%;">NEWSam_English: #Euro2020: #HenrikhMkhitaryan congratulates #Italians | https://t.co/fwtfmEo9Ap Sport - All about sports https://t.co/ogcv0LgWGJ</div>`)[0];
+            popup_6c3e9f9e61a3461e9c593aaa0b8ac981.setContent(html_c93034a3a1624182aee60c20c94555f1);
+        
+
+        marker_6bfce55f9ecd4e1da0114f44749f9337.bindPopup(popup_6c3e9f9e61a3461e9c593aaa0b8ac981)
+        ;
+
+        
+    
+</script>
