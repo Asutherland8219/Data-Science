@@ -15,3 +15,13 @@ pyplot.show()
 dots = pyplot.scatter(reduced_data[:, 0], reduced_data[:,1], c=digits.target, cmap=pyplot.cm.get_cmap('nipy_spectral_r', 10))
 
 cmap = pyplot.cm.get_cmap('nipy_spectral_r', 10)
+colorbar = pyplot.colorbar(dots)
+pyplot.show()
+
+# ''' Create the data set as a 3D visulization '''
+
+# from mpl_toolkits.mplot3d import Axes3D
+# figure = pyplot.figure(figsize=(9,9))
+# axes = figure.add_subplot(111, projection='3d')
+# dots = axes.scatter(xs=reduced_data[:, 0], ys= reduced_data[:,1], zs=reduced_data[:,2], c=digits.target, cmap=pyplot.cm.get_cmap('nipy_spectral_r', 10))
+# pyplot.show()
