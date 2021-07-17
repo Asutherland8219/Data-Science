@@ -1,5 +1,6 @@
 from token import ISTERMINAL
 from tensorflow.keras.datasets import mnist
+from tensorflow.python.keras.metrics import accuracy
 
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
 
@@ -44,3 +45,80 @@ cnn = Sequential()
 
 # adding layers
 from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
+cnn.add(Conv2D(filters=64, kernel_size=(3,3), activation='relu'))
+
+# add pooling layer 
+cnn.add(MaxPooling2D(pool_size=(2,2)))
+
+#2nd pooling layer 
+cnn.add(Conv2D(filters=128, kernel_size=(3,3), activation='relu'))
+cnn.add(MaxPooling2D(pool_size=(2,2)))
+
+# flatten the results 
+cnn.add(Flatten())
+
+# add dense layer
+cnn.add(Dense(units=128, activation='relu'))
+
+# add another dense layer
+cnn.add(Dense(units=10, activation='softmax'))
+
+cnn.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+cnn.fit(X_train, y_train, epochs=5, batch_size=64, validation_split=0.1)
+
+print(cnn.summary())
+
+''' Visualize a models structure '''
+# from tensorflow.keras.utils import plot_model
+# from IPython.display import Image
+# plot_model(cnn, to_file='convnet.png', show_shapes=True, show_layer_names=True)
+# Image = Image(filename='convnet.png')
+
+''' Evaluate the model '''
+loss, accuracy = cnn.evaluate(X_test, y_test)
+print(loss, accuracy)
+
+''' Make your predictions (ie. implement the model ) '''
+predictions = cnn.predict(X_test)
+
+for index, probability in enumerate(predictions[0]):
+    print(f'{index}: {probability:.10%}')
+
+''' Locate and then visualize the incorrect predictions '''
+images  = X_test.reshape((10000, 28, 28))
+incorrect_predictions = []
+
+for i, (p, e) in enumerate(zip(predictions, y_test)):
+    predicted, expected = np.argmax(p), np.argmax(e)
+
+    if predicted != expected:
+        incorrect_predictions.append(
+            (i, images[i], predicted, expected)
+        )
+
+# check how many there are
+print(len(incorrect_predictions))
+
+figure, axes = pyplot.subplots(nrows=4, ncols=6, figsize=(16, 12))
+
+for axes, item in zip(axes.ravel(), incorrect_predictions):
+    index, image, predicted, expected = item
+    axes.imshow(image, cmap=pyplot.cm.gray_r)
+    axes.set_xticks([])
+    axes.set_yticks([])
+    axes.set_title(
+        f'index: {index} np: {predicted}; e: {expected}')
+pyplot.tight_layout()
+
+''' Display the prediction mistake proabilities '''
+def display_probabilities(prediction):
+    for index, probability in enumerate(prediction):
+        print(f'{index}: {probability:.10%}')
+
+''' Save and load the model '''
+cnn.save('mnist_cnn.h5')
+
+# to load do:
+# from tensorflow.keras.models import load_model 
+# cnn = load_model('mnist_cnn.h5')
+

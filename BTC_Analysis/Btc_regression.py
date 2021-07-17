@@ -1,8 +1,9 @@
+from typing import final
 import numpy as py
 import pandas as pd 
 import xlsxwriter 
 
-btc = pd.read_csv('./Data-Science/BTC_Analysis/BTC-USD.csv')
+btc = pd.read_csv('BTC_Analysis/BTC-USD.csv')
 
 my_columns = ['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
 
