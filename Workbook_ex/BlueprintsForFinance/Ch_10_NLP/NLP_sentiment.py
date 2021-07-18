@@ -4,6 +4,8 @@ import pip
 #NLP libraries
 from textblob import TextBlob
 import spacy
+import yfinance as yf
+
 import nltk
 import warnings
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -50,7 +52,6 @@ import numpy as np
 import datetime
 from datetime import date
 import matplotlib.pyplot as pyplot
-import yfinance as yf
 
 
 #Additional Libraries 
