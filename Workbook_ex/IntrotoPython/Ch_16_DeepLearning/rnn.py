@@ -1,6 +1,7 @@
 ''' Sentiment analysis using IMDB movie review dataset '''
 # We are using the pre labelled keras data set 
 
+from sklearn.utils import validation
 from tensorflow.keras.datasets import imdb
 from tensorflow.python.keras.backend import random_bernoulli
 from tensorflow.python.keras.layers.embeddings import Embedding 
@@ -37,9 +38,21 @@ rnn = Sequential()
 from tensorflow.keras.layers import Dense, LSTM
 
 rnn.add(Embedding(input_dim=number_of_words, output_dim=128, input_length=words_per_review))
+
 rnn.add(LSTM(units=128, dropout=0.2, recurrent_dropout=0.2))
 
+rnn.add(Dense(units=1, activation='sigmoiod'))
 
+''' Compile and summarize '''
+rnn.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
+print(rnn.summary())
+
+''' Train and evaluate the model '''
+rnn.fit(X_train, y_train, epochs=10, batch_size=32, validation_data=(X_test, y_test))
+
+results = rnn.evaluate(X_test, y_test)
+
+print(results)
 
 
