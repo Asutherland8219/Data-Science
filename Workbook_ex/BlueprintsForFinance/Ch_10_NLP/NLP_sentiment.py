@@ -63,9 +63,10 @@ import sys
 import warnings
 warnings.filterwarnings('ignore')
 
-tickers = pd.read_json('Workbook_ex/BlueprintsForFinance/Ch_10_NLP/tickers.json')
-start = '2007-01-01'
-end = '2021-01-01'
+# tickers = pd.read_json('Workbook_ex/BlueprintsForFinance/Ch_10_NLP/tickers.json')
+tickers = ["AAPL", "MSFT", "FB", "WMT", "JPM", "TSLA", "GOOG", "AMZN", "NFLX", "ADBE"]
+start = '2010-01-01'
+end = '2018-12-31'
 
 df_ticker_return = pd.DataFrame()
 
@@ -78,11 +79,11 @@ for ticker in tickers:
         data_temp = ticker_yf.history(start=start, end=end)
         data_temp['ticker']= ticker
         df_ticker_return = df_ticker_return.append(data_temp)
-df_ticker_return.to_csv(r'Ch_10_NLP\returndata.csv')
+df_ticker_return.to_csv('Workbook_ex/Datasets/NLP_sets/returndata.csv')
 
 print(df_ticker_return.head())
 
-z = zipfile.ZipFile("Ch_10_NLP/raw_headline.zip", "r")
+z = zipfile.ZipFile(r"Workbook_ex\Datasets\NLP_sets\Raw Headline Data.zip")
 testFile = z.namelist()[10]
 fileData = z.open(testFile).read()
 fileDataSample = json.loads(fileData)['content'][1:500]
@@ -109,7 +110,7 @@ data = None
 data_df_news = []
 ret = []
 ret_f = []
-with zipfile.ZipFile("Workbook_ex\Datasets\Raw Headline Data.zip", "r") as z:
+with zipfile.ZipFile("Workbook_ex/Datasets/NLP_sets/Raw Headline Data.zip", "r") as z:
     for filename in z.namelist(): 
         #print(filename)
         try:               
@@ -134,6 +135,34 @@ with zipfile.ZipFile("Workbook_ex\Datasets\Raw Headline Data.zip", "r") as z:
                 data_df_news.append(df_f)            
         except:
             pass  
+
+data_df_news = pd.concat(data_df_news)
+print(data_df_news.head())
+
+''' Preparing the combined data '''
+df_ticker_return['ret_curr'] = df_ticker_return['Close'].pct_change()
+
+#Event return
+df_ticker_return['eventRet'] = df_ticker_return['ret_curr'] + df_ticker_return['ret_curr'].shift(-1) + df_ticker_return['ret_curr'].shift(1)
+
+df_ticker_return.reset_index(level=0, inplace=True)
+df_ticker_return['date'] = pd.to_datetime(df_ticker_return['Date']).apply(lambda x: x.date())
+
+combinedDataFrame = pd.merge(data_df_news, df_ticker_return, how='left', left_on=['date', 'ticker'], right_on=['date', 'ticker'])
+combinedDataFrame = combinedDataFrame[combinedDataFrame['ticker'].isin(tickers)]
+data_df = combinedDataFrame[['ticker', 'headline', 'date', 'eventRet', 'Close']]
+data_df = data_df.dropna()
+
+print(data_df.head()
+)
+
+''' Save the data for use later '''
+data_df.dropna().to_csv(r'Workbook_ex/Datasets/NLP_sets/sentiment.csv', sep='|', index=False)
+
+''' If you want to load pre saved data use this'''
+# data_df = pd.read_csv(r'Workbook_ex/Datasets/NLP_sets/sentiment.csv', sep='|')
+# data_df = data_df.dropna()
+# print(data_df.shape, data_df.ticker.unique().shape)
 
 
 
