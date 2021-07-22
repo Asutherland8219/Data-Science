@@ -2,7 +2,7 @@ import pkg_resources
 import pip
 
 #NLP libraries
-from textblob import TextBlob
+from textblob import TextBlob, tokenizers
 import spacy
 import yfinance as yf
 
@@ -163,6 +163,138 @@ data_df.dropna().to_csv(r'Workbook_ex/Datasets/NLP_sets/sentiment.csv', sep='|',
 # data_df = pd.read_csv(r'Workbook_ex/Datasets/NLP_sets/sentiment.csv', sep='|')
 # data_df = data_df.dropna()
 # print(data_df.shape, data_df.ticker.unique().shape)
+
+''' Begin Creating model for analysis '''
+# predefined 
+text1 = "Bayer (OTCPK:BAYRY) started the week up 3.5% to €74/share in Frankfurt, touching their \
+highest level in 14 months, after the U.S. government said a $25M glyphosate decision against the \
+company should be reversed."
+
+print(TextBlob(text1).sentiment.polarity)
+
+#graph the data 
+
+data_df['sentiment_textblob'] = [TextBlob(s).sentiment.polarity for s in data_df['headline']]
+
+pyplot.scatter(data_df['sentiment_textblob'], data_df['eventRet'], alpha=0.5)
+pyplot.title('Scatter Between Event Return and Sentiments- all data')
+pyplot.ylabel('Event Return')
+pyplot.xlabel('Sentiments')
+pyplot.show()
+
+#correlation graph 
+correlation = data_df['eventRet'].corr(data_df['sentiment_textblob'])
+print(correlation)
+
+data_df_stock = data_df[data_df['ticker'] == 'AAPL' ]
+pyplot.scatter(data_df['sentiment_textblob'], data_df_stock['eventRet'], alpha=0.5)
+pyplot.title('Scatter Between Event Return and Sentiments-AAPL')
+pyplot.ylabel('Event Return')
+pyplot.xlabel('Sentiments')
+pyplot.show()
+
+
+''' Creating our own LSTM model -- Supervised'''
+# this done using a premade dataset from kaggle.com
+sentiments_data = pd.read_csv(r'Workbook_ex/Datasets/NLP_sets/LabelledNewsData.csv', encoding='ISO-8859-1')
+print(sentiments_data.head())
+
+all_vectors = pd.np.array([pd.np.array([token.vector for token in nlp(s) ])]).mean(axis=0)*pd.np.ones((300)) \
+    for s in sentiments_data['headline']])
+
+Y = sentiments_data['sentiment']
+X = all_vectors
+
+from sklearn.model_selection import train_test_split, KFold, cross_val_score, GridSearchCV
+validation_size = 0.3
+seed = 7
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=validation_size, random_state=seed)
+
+num_folds = 10
+seed = 7
+scoring = 'accuracy'
+
+# check the algorithms
+models = []
+models.append(('LR', LogisticRegression()))
+models.append(('KNN', KNeighborsClassifier()))
+models.append(('CART', DecisionTreeClassifier()))
+models.append(('SVM', SVC()))
+
+# Neural Networks
+models.append(('NN', MLPClassifier()))
+
+# Ensemble models 
+models.append(('RF', RandomForestClassifier()))
+
+## Running each model
+results = []
+names = []
+kfold_results = []
+test_results = []
+train_results = []
+
+for name, model in models:
+    kfold = KFold(n_splits=num_folds, random_state=seed)
+    cv_results = cross_val_score(model, X_train, y_train, cv=kfold, scoring=scoring)
+    results.append(cv_results)
+    names.append(name)
+
+    # training period
+    res = model.fit(X_train, y_train)
+    train_result = accuracy_score(res.predict(X_train), y_train)
+    train_results.append(train_result)
+
+    # test results 
+    test_result = accuracy_score(res.predict(X_test), y_test)
+    test_results.append(test_result)
+
+    msg = '%s: %f (%f) %f %f' % (name, cv_results.mean(), cv_results.std(), train_result, test_result)
+    print(msg)
+    print(confusion_matrix(res.predict(X_test), y_test))
+
+# graph the comparison
+fig = pyplot.figure()
+ind = np.arange(len(names)) 
+width = 0.35
+fig.suptitle('Algorithm Comparison')
+ax = fig.add_subplot(111)
+pyplot.bar(ind - width/2, train_results, width=width, label='Train Error')
+pyplot.bar(ind + width/2, test_results, width=width, label='Test Error')
+
+fig.set_size_inches(15, 8)
+pyplot.legend()
+ax.set_xticks(ind)
+ax.set_xticklabels(names)
+pyplot.show()
+
+
+''' LSTM model '''
+### Create the sequence
+vocabulary_size = 20000
+tokenizer = Tokenizer(num_words= vocabulary_size)
+tokenizer.fit_on_texts(sentiments_data['headline'])
+sequences = tokenizer.texts_to_sequences(sentiments_data['headline'])
+X_LSTM = pad_sequences(sequences, maxlen=50)
+
+y_LSTM =  sentiments_data["sentiment"]
+X_train_LSTM, X_test_LSTM, y_train_LSTM, y_test_LSTM = train_test_split(X_LSTM, y_LSTM, test_size=validation_size, random_state=seed)
+
+# Use keras to build the neural network classifier
+from keras.wrappers.scikit_learn import KerasClassifier
+def create_model(input_length=50):
+    model = Sequential()
+    model.add(Embedding(20000, 300, input_length=50))
+    model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return model 
+
+model_LSTM = KerasClassifier(build_fn= create_model, epochs=3, verbose=1, validation_split=0.4)
+model_LSTM.fit(X_train_LSTM, y_train_LSTM)
+
+
+
 
 
 
