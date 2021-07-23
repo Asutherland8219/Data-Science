@@ -1,3 +1,4 @@
+from typing import final
 import pkg_resources
 import pip
 
@@ -292,6 +293,161 @@ def create_model(input_length=50):
 
 model_LSTM = KerasClassifier(build_fn= create_model, epochs=3, verbose=1, validation_split=0.4)
 model_LSTM.fit(X_train_LSTM, y_train_LSTM)
+
+# accuracy of model 
+train_result_LSTM  = accuracy_score(model_LSTM.predict(X_train_LSTM),y_train_LSTM)
+test_result_LSTM = accuracy_score(model_LSTM.predict(X_test_LSTM), y_test_LSTM)
+
+print(train_result_LSTM, test_result_LSTM)
+
+train_results.append(train_result_LSTM); test_results.append(test_result_LSTM)
+names.append('LSTM')
+
+# redo the graph 
+fig = pyplot.figure()
+ind = np.arange(len(names)) 
+width = 0.35
+fig.suptitle('Algorithm Comparison')
+ax = fig.add_subplot(111)
+pyplot.bar(ind - width/2, train_results, width=width, label='Train Error')
+pyplot.bar(ind + width/2, test_results, width=width, label='Test Error')
+
+fig.set_size_inches(15, 8)
+pyplot.legend()
+ax.set_xticks(ind)
+ax.set_xticklabels(names)
+pyplot.show()
+
+## LSTM is the best model so we will use it; 
+sequences_LSTM = tokenizer.texts_to_sequences(data_df['headline'])
+X_LSTM = pad_sequences(sequences_LSTM, maxlen=50)
+y_LSTM = model_LSTM.predict(X_LSTM)
+
+data_df['sentiment_LSTM'] = y_LSTM
+
+correlation = data_df['eventRet'].corr(data_df['sentiment_LSTM'])
+print(correlation)
+print(data_df.head())
+
+''' Now we create the unsupervised model to compare vs supervised '''
+sia = SentimentIntensityAnalyzer()
+stock_lex = pd.read_csv('Workbook_ex/Datasets/NLP_sets/LexiconData.csv')
+stock_lex['sentiment'] = (stock_lex['Aff_Score'] + stock_lex['Neg_score'])/2
+stock_lex = dict(zip(stock_lex.Item, stock_lex.sentiment))
+stock_lex = {k:v for k,v in stock_lex.items() if len (k.split(' '))==1}
+stock_lex_scaled = {}
+for k, v in stock_lex.items():
+    if v > 0:
+        stock_lex_scaled[k] = v/max(stock_lex.values()) * 4
+    else:
+        stock_lex_scaled[k] = v/min(stock_lex.values()) * -4
+
+final_lex = {}
+final_lex.update(stock_lex_scaled)
+final_lex.update(sia.lexicon)
+sia.lexicon = final_lex
+
+# Quickly test
+text = "AAPL is trading higher after reporting its October sales rose 12.6% M/M. It has seen a 20%+ jump in orders"
+sia.polarity_scores(text)['compound']
+
+# Extract Sentiment 
+vader_sentiments = pd.np.array(sia.polarity_scores(s)['compound'] for s in data_df['headline'])
+
+data_df['sentiment_lex'] = vader_sentiments
+correlation = data_df['eventRet'].corr(data_df['sentiment_lex'])
+print(correlation)
+
+# Graph
+pyplot.scatter(data_df['sentiment_lex'], data_df['eventRet'], alpha=0.5)
+pyplot.title('Scatter Between Event return and sentiments-all data')
+pyplot.ylabel('Event Return')
+pyplot.xlabel('Sentiments')
+pyplot.show()
+
+pyplot.scatter(data_df['sentiment_lex'], data_df['AMZN'], alpha=0.5)
+pyplot.title('Scatter Between Event return and sentiments-AMZN')
+pyplot.ylabel('Event Return')
+pyplot.xlabel('Sentiments')
+pyplot.show()
+
+data_df.to_csv(r'Workbook_ex/Datasets/NLP_sets/Step4_Datawithsentiments', sep= '|')
+
+''' EDA and comparison '''
+data_df = pd.read_csv(r'Workbook_ex/Datasets/NLP_sets/Step4_Datawithsentiments', sep= '|')
+data_df = data_df[data_df['ticker'].isin(tickers)]
+
+data_new_df_stock = data_df[data_df['ticker'] == 'NFLX'][['ticker', 'headline', 'sentiment_textblob', 'sentiment_LSTM', 'sentiment_lex']]
+from pandas import option_context
+
+with option_context('display.max_colwidth', 400):
+    print(data_new_df_stock.head(1))
+
+# graph data
+for ticker in tickers[2:4]:
+    data_df_stock  = data_df[data_df['ticker'] == ticker]
+    fig = pyplot.figure(figsize=(14, 4), constrained_layout=False)
+
+    pyplot.subplot(1, 2, 1)
+    pyplot.scatter(data_df_stock['sentiment_lex'],data_df_stock['eventRet'], alpha=0.5)
+    pyplot.title(ticker + '-Scatter Between Event return and sentiments-lexicon')
+    pyplot.ylabel('Event Return')
+    pyplot.xlabel('Sentiments-Lexicon')
+
+    
+    pyplot.subplot(1, 2, 2)
+    pyplot.scatter(data_df_stock['sentiment_textblob'],data_df_stock['eventRet'], alpha=0.5)
+    pyplot.title(ticker + '-Scatter Between Event return and sentiments-textblob')
+    pyplot.ylabel('Event Return')
+    pyplot.xlabel('Sentiments-Textblob')
+    pyplot.show()
+
+''' Model Evaluation  and building a trading strategy '''
+# here we use a tool called backtrader to test some trading strategies
+
+import backtrader as bt 
+import backtrader.indicators as btind 
+import backtrader.analyzers as btanalyzers
+
+class Sentiment(bt.Indicator):
+    lines = ('sentiment',)
+    plotinfo = dict(
+        plotymargin=0.5,
+        plothlines=[0],
+        plotyticks=[1.0, 0, -1.0])
+
+    def next(self):
+        self.sentiment = 0.0
+        self.date = self.data.datetime
+        date = bt.num2date(self.date[0]).date()
+        prev_sentiment = self.sentiment
+        if date in date_sentiment:
+            self.sentiment = date_sentiment[date]
+        self.lines.sentiment[0] = self.sentiment
+
+class SentimentStrat(bt.Strategy):
+    params = (
+        ('period', 15)
+        ('printlog', True),
+    )
+
+    def log(self, txt, dt=None, doprint=False):
+        ''' Logging function for this strategy '''
+        if self.params.printlog or doprint:
+            dt = dt or self.datas[0].datetime.date(0)
+            print('%s, %s' % (dt.isoformat(), txt))
+    
+    def __init__(self):
+        self.dataclose = self.datas[0].close
+        # keep track of pending orders
+        self.order = None
+        self.buyprice = None 
+        self.buycomm = None 
+        self.sma = bt.indicators.SimpleMovingAverage(
+            self.datas[0], preiod=self.params.period
+        )
+        
+
 
 
 
