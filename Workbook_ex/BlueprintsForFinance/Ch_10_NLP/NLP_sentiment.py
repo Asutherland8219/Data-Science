@@ -1,4 +1,5 @@
 from typing import final
+from backtrader import cerebro
 import pkg_resources
 import pip
 
@@ -187,20 +188,20 @@ pyplot.show()
 correlation = data_df['eventRet'].corr(data_df['sentiment_textblob'])
 print(correlation)
 
-data_df_stock = data_df[data_df['ticker'] == 'AAPL' ]
-pyplot.scatter(data_df['sentiment_textblob'], data_df_stock['eventRet'], alpha=0.5)
-pyplot.title('Scatter Between Event Return and Sentiments-AAPL')
-pyplot.ylabel('Event Return')
-pyplot.xlabel('Sentiments')
-pyplot.show()
+# data_df_stock = data_df[data_df['ticker'] == 'AAPL' ]
+# pyplot.scatter(data_df_stock['sentiment_textblob'], data_df_stock['eventRet'], alpha=0.5)
+# pyplot.title('Scatter Between Event Return and Sentiments-AAPL')
+# pyplot.ylabel('Event Return')
+# pyplot.xlabel('Sentiments')
+# pyplot.show()
 
 
 ''' Creating our own LSTM model -- Supervised'''
 # this done using a premade dataset from kaggle.com
-sentiments_data = pd.read_csv(r'Workbook_ex/Datasets/NLP_sets/LabelledNewsData.csv', encoding='ISO-8859-1')
+sentiments_data = pd.read_csv('Workbook_ex/Datasets/NLP_sets/LabelledNewsData.csv', encoding='ISO-8859-1')
 print(sentiments_data.head())
 
-all_vectors = pd.np.array([pd.np.array([token.vector for token in nlp(s) ])]).mean(axis=0)*pd.np.ones((300)) \
+all_vectors = pd.np.array([pd.np.array([token.vector for token in nlp(s)]).mean(axis=0)*pd.np.ones((96)) \
     for s in sentiments_data['headline']])
 
 Y = sentiments_data['sentiment']
@@ -236,7 +237,7 @@ test_results = []
 train_results = []
 
 for name, model in models:
-    kfold = KFold(n_splits=num_folds, random_state=seed)
+    kfold = KFold(n_splits=num_folds, random_state=seed, shuffle=True)
     cv_results = cross_val_score(model, X_train, y_train, cv=kfold, scoring=scoring)
     results.append(cv_results)
     names.append(name)
@@ -332,7 +333,7 @@ print(data_df.head())
 ''' Now we create the unsupervised model to compare vs supervised '''
 sia = SentimentIntensityAnalyzer()
 stock_lex = pd.read_csv('Workbook_ex/Datasets/NLP_sets/LexiconData.csv')
-stock_lex['sentiment'] = (stock_lex['Aff_Score'] + stock_lex['Neg_score'])/2
+stock_lex['sentiment'] = (stock_lex['Aff_Score'] + stock_lex['Neg_Score'])/2
 stock_lex = dict(zip(stock_lex.Item, stock_lex.sentiment))
 stock_lex = {k:v for k,v in stock_lex.items() if len (k.split(' '))==1}
 stock_lex_scaled = {}
@@ -355,8 +356,8 @@ sia.polarity_scores(text)['compound']
 vader_sentiments = pd.np.array(sia.polarity_scores(s)['compound'] for s in data_df['headline'])
 
 data_df['sentiment_lex'] = vader_sentiments
-correlation = data_df['eventRet'].corr(data_df['sentiment_lex'])
-print(correlation)
+# correlation = data_df['eventRet'].corr(data_df['sentiment_lex'])
+# print(correlation)
 
 # Graph
 pyplot.scatter(data_df['sentiment_lex'], data_df['eventRet'], alpha=0.5)
@@ -447,11 +448,95 @@ class SentimentStrat(bt.Strategy):
             self.datas[0], preiod=self.params.period
         )
         
+    def notify_order(self, order):
+        if order.status in [order.Submitted, order.Accepted]:
+            return
+
+        if order.status in [order.Completed]:
+            if order.isbuy():
+                self.log(
+                    'BUY EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f'%
+                    (order.executed.price, order.executed.value, order.executed.comm)
+                )
+
+            else: #sell
+                self.log('SELL EXECUTED, Price: %2f, Cost: %2f, Comm %2f' % 
+                (order.executed.price,
+                order.executed.value, 
+                order.executed.comm))
+
+            self.bar_executed = len(self)
+
+        elif order.status in [order.Canceled, order.Margin, order.Rejected]:
+            self.log('Order Canceled/Margin/Rejected')
+
+        self.order = None
+
+    def notify_trade(self, trade):
+        if not trade.isclosed:
+            return
+        
+        self.log('OPERATION PROFIT, GROSS %.2f, NET %.2f' % (trade.pnl, trade.pnlcomm))
 
 
+    ### Main Strat ###
+    def next(self):
+        date = bt.num2date(self.data[0]).date()
+        prev_sentiment = self.sentiment
+        if date in date_sentiment:
+            self.sentiment = date_sentiment[date]
 
 
+        # check if pending, if yes cannot send a 2nd one 
+        if self.order:
+            return
+        if not self.position and prev_sentiment:
+            if self.dataclose[0] > self.sma[0] and self.sentiment - prev_sentiment >= 0.5:
+                self.log('Previous Sentiment %.2f, New Sentiment %.2f BUY CREATE, %.2f' % (prev_sentiment, self.sentiment, self.dataclose[0]))
+                self.order = self.buy()
 
+        elif prev_sentiment:
+            if self.dataclose[0] < self.sma[0] and self.sentiment - prev_sentiment <= -0.5:
+                    self.log('Previous Sentiment %.2f, New Sentiment %.2f SELL CREATE, %.2f' % (prev_sentiment, self.sentiment, self.dataclose[0]))
+                    self.order = self.sell()
 
+    def stop(self):
+        self.log('(MA Period %2d) Ending Value %.2f' %
+        (self.params.period, self.broker.getvalue()), doprint= True)
+
+# create the toggle switch 
+
+def run_strategy(ticker, start, end):
+    print(ticker)
+    ticker = yf.Ticker(ticker)
+    df_ticker = ticker.history(start=start, end=end)
+
+    cerebro = bt.Cerebro()
+
+    cerebro.addstrategy(SentimentStrat)
+    data = bt.feeds.PandasData(dataname=df_ticker)
+    cerebro.adddata(data)
+    start = 100000.0
+    cerebro.broker.setcash(start)
+    cerebro.addsizer(bt.sizer.FixedSize, stake= 100)
+    print('Starting Portfolio Value: %.2f' % start)
+    pyplot.rcParams['figure.figsize'] = [10, 6]
+    pyplot.rcParams['font.size'] = '12'
+    cerebro.run()
+    cerebro.plot(volume=False, iplot=True, plotname= ticker)
+    end = cerebro.broker.getvalue()
+    print('Start Portfolio value: %.2f\nFinal Portfolio Value: %.2f\nProfit: %.2f\n'\
+        % (start, end, end-start))
+    return float(df_ticker['Close'][0]), (end-start)
+
+''' Multiple stock returns '''
+results_tickers = {}
+for ticker in tickers:    
+    date_sentiment=data_df[data_df['ticker'].isin([ticker])]
+    date_sentiment=date_sentiment[['date','sentiment_lex']]
+    date_sentiment['date']=pd.to_datetime(date_sentiment['date'], format='%Y-%m-%d').dt.date
+    date_sentiment=date_sentiment.set_index('date')['sentiment_lex']
+    date_sentiment=date_sentiment.to_dict()
+    results_tickers[ticker] = run_strategy(ticker, start = '2012-01-01', end = '2018-12-12')
 
 
