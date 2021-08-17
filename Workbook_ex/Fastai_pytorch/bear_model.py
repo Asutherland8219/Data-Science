@@ -81,3 +81,8 @@ dls = bears.dataloaders(path)
 learn = cnn_learner(dls, resnet18, metrics=error_rate)
 learn.fine_tuen(4)
 
+
+# Confusion matrix 
+interp = ClassificationInterpretatiuon.from_learner(learn)
+interp.plot_confusion_matrix()
+
