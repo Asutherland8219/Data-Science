@@ -149,4 +149,84 @@ class ConvLayer(Module):
         x = F.conv2d(x, self.w, self.b, stride=self.stride, padding=1)
         if self.act: x = F.relu(x)
         return x
-    
+
+''' Create a linear layer '''
+
+class Linear(Module):
+    def __init__(self, ni, nf):
+        super().__init__()
+        self.w = Parameter(torch.zeros(nf, ni))
+        self.b = Parameter(torch.zeros(nf))
+        nn.init.xavier_normal_(self.w)
+
+    def forward(self, x): return x @self.w.t() + self.b
+
+''' Create Testing model '''
+class T(Module):
+    def __init__(self):
+        super().__init__()
+        self.c, self.l = ConvLayer(3, 4), Linear(4, 2)
+        
+# create a Sequential Class to make architetctures easier to implement
+
+class Sequential(Module):
+    def __init__(self, *layers):
+        super().__init__()
+        self.layers = layers
+        self.register_modules(*layers)
+
+    def forward(self, x):
+        for l in self.layers: x = l(x)
+        return x
+
+## Create an Adaptive Pool to a 1x1 and flatten it
+class AdaptivePool(Module):
+    def forward(self, x): return x.mean((2,3))
+
+
+''' Create the CNN; pay attention to all of the components '''
+
+def simple_cnn():
+    return Sequential(
+        ConvLayer(3, 16, stride=2), #32
+        ConvLayer(16, 32, stride=2), #16
+        ConvLayer(32, 64, stride=2), #8
+        ConvLayer(64, 128, stride=2), #4
+        AdaptivePool(),
+        Linear(128, 10)
+    )
+
+# Add a hook 
+def print_stats(outp, inp): print(outp.mean().item(), outp.std().item())
+for i in range(4): m.layers[i].hook = print_stats
+
+r = m(xbt)
+print(r.shape())
+
+''' This is a checkpoint, we now have 1) Data and 2) a model, now wer are going to create a LOSS function. '''
+
+# negative log likelihood
+def nll(input, target): return -input[range(target.shape[0]), target].mean()
+
+# need to combine the log and the softmax 
+def log_softmax(x): return (x.exp()/(x.exp().sum(-1, keepdim=True))).log()
+sm = log_softmax(r)
+
+loss = nll(sm,yb)
+print(loss)
+
+def log_softmax(x): return x - x.exp().sum(-1, keepdim=True).log()
+sm = log_softmax(r)
+
+def logsumexp(x):
+     m = x.max(-1)[0]
+     return m + (x-m[:, None]).exp().sum(-1).log()
+
+# we can add the log sum to the log_softmax function 
+def log_softmax(x): return x - x.logsumexp(-1, keepdim=True)
+
+# futhermore we can  use this to create cross_entropy
+def cross_entropy(preds, yb): return nll(log_softmax(preds), yb).mean()
+
+''' Finally we must set up the learner '''    
+
