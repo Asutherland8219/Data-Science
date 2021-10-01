@@ -228,5 +228,150 @@ def log_softmax(x): return x - x.logsumexp(-1, keepdim=True)
 # futhermore we can  use this to create cross_entropy
 def cross_entropy(preds, yb): return nll(log_softmax(preds), yb).mean()
 
-''' Finally we must set up the learner '''    
+''' Finally we must set up the learner ''' 
+
+class SGD:
+    def __init__(self, params, lr, wd=0): store_attr(self, 'params,lr,wd')
+    def step(self):
+        for p in self.params:
+            p.data -= (p.grad.data + p.data*self.wd) * self.lr
+            p.grad.data.zero_()
+
+class DataLoaders:
+    def __init__(self, *dls): self.train, self.valid = dls
+
+dls = DataLoaders(train_dl, valid_dl)
+
+class Learner:
+    def __init__(self, model, dls, loss_func, lr, cbs, opt_func=SGD):
+        store_attr(self, 'model, dls, loss_func, lr , cbs, opt_func')
+        for cb in cbs: cb.learner = self 
+
+    def one_batch(self):
+        self('before_batch')
+        xb, yb = self.batch
+        self.preds = self.model(xb)
+        self.loss = self.loss_func(self.preds, yb)
+        if self.model.training:
+            self.loss.backward()
+            self.opt.step()
+        self('after_batch')
+
+    def one_epoch(self, train):
+        self.model.training = train
+        self('before_epoch')
+        dl = self.dls.train if train else self.dls.valid
+        for self.num, self.batch in enumerate(progress_bar(dl, leave=False)):
+            self.one_batch()
+        self('after_epoch')
+
+    def fit(self, n_epochs):
+        self('before_fit')
+        self.opt = self.opt_func(self.model.parameters(), self.lr)
+        self.n_epochs = n_epochs
+        try:
+            for self.epoch in range(n_epochs):
+                self.one_epoch(True)
+                self.one_epoch(False)
+        except CancelFitException: pass
+        self('after_fit')
+
+    def __call__(self, name):
+        for cb in self.cbs: getattr(cb, name, noop)()
+
+''' Create a callback '''
+for cb in cbs:cb.learner = self
+
+class Callback(GetAttr): _default='learner'
+
+## move all learners to point to the gpu 
+class setupLearnerCB(Callback):
+    def before_batch(self):
+        xb, yb = to_device(self.batch)
+        self.learner.batch = tfm_x(xb), yb
+
+    def before_fit(self): self.model.cuda()
+
+## track and print progress
+class TrackResults(Callback):
+    def before_epoch(self): self.accs, self.losses, self.ns = [],[],[]
+
+    def after_epoch(self):
+        n = sum(self.ns)
+        print(self.epoch, self.model.training,
+            sum(self.losses).item()/n,
+            sum(self.accs).item()/n)
+
+    def after_batch(self):
+        xb, yb = self.batch
+        acc = (self.preds.argmax(dim=1)== yb.float().sum())
+        self.accs.append(acc)
+        n = len(xb)
+        self.losses.append(self.loss*n)
+        self.ns.append(n)
+
+
+# use tghe learner 
+cbs = [setupLearnerCB(), TrackResults()]
+learn = Learner(simple_cnn(), dls, cross_entropy, lr= 0.1, cbs=cbs)
+learn.fit(1)
+
+
+''' Schedule the learning rate '''
+
+class LRFinder(Callback):
+    def before_fit(self):
+        self.losses, self.lrs = [],[]
+        self.learner.lr = 1e-6
+
+    def before_batch(self):
+        if not self.model.training: return
+        self.opt.lr *= 1.2
+
+    def after_batch(self):
+        if not self.model.training: return
+        if self.opt.lr>10 or torch.isnan(self.loss): raise CancelFitException
+        self.losses.append(self.loss.item())
+        self.lrs.append(self.opt.lr)
+
+# set up and take a look at the results 
+lrfind = LRFinder()
+learn = Learner(simple_cnn(), dls, cross_entropy, lr=0.1, cbs=cbs+[lrfind])
+learn.fit(2)
+
+plt.plot(lrfind.lrs[:, -2], lrfind.losses[:, -2])
+plt.xscale('log')
+
+# onecycle training call back 
+
+class OneCycle(Callback):
+    def __init__(self, base_lr): self.base_lr = base_lr
+    def before_fit(self): self.lrs = []
+
+    def before_batch(self):
+        if not self.model.training: return
+        n = len(self.dls.train)
+        bn = self.epoch*n + self.num
+        mn = self.n_epochs*n
+        pct = bn/mn
+        pct_start, div_start = 0.25, 10
+        if pct < pct_start:
+            pct /= pct_start
+            lr = (1-pct)*self.base_lr/div_start + pct*self.base_lr
+        else:
+            pct = (pct-pct_start)/(1-pct_start)
+            lr = (1-pct)*self.base_lr
+        self.opt.lr = lr
+        self.lrs.append(lr)
+
+# run the cycle
+onecyc = OneCycle(0.1)
+learn = Learner(simple_cnn(), dls, cross_entropy, lr=0.1, cbs=cbs+[onecyc])
+
+
+
+
+
+
+
 
