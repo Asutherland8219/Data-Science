@@ -3205,3 +3205,10 @@ Workbook_ex/Datasets/Kaggle_sets/blue-bulldozer/Valid.csv
 Workbook_ex/Datasets/Kaggle_sets/blue-bulldozer/Valid.zip
 Workbook_ex/Datasets/Kaggle_sets/blue-bulldozer/ValidSolution.csv
 Workbook_ex/Deeplearning_illustrated/Ch_12_GAN/full_numpy_bitmap_axe.npy
+cartpole/weights_0000.hdf5
+cartpole/weights_0050.hdf5
+cartpole/weights_0100.hdf5
+cartpole/weights_0150.hdf5
+cartpole/weights_0200.hdf5
+cartpole/weights_0250.hdf5
+cartpole/weights_0300.hdf5
