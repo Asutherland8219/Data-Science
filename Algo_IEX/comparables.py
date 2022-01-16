@@ -77,7 +77,36 @@ primer['primary'] = total_tags[0]
 primer['secondary'] = total_tags[1]
 
 
-print(primer)
+''' Get a sector list to draw from '''
+# api_call_sector = f"https://cloud.iexapis.com/stable/stock/market/ref-data/sectors?token={IEX_NEW_TOKEN}"
+# sector_list = requests.get(api_call_sector)
+
+# print(sector_list)
+
+# with open('sector_data.json', 'w') as outfile:
+#     json.dump(sector_list, outfile)
+
+api_call_tech = f"https://cloud.iexapis.com/stable/stock/market/collection/sector?collectionName=Technology&token={IEX_NEW_TOKEN}"
+tech_list = requests.get(api_call_tech).json()
+
+# with open('tech_data.json', 'w') as outfile:
+#     json.dump(tech_list, outfile)
+
+api_most_active_tech = f"https://cloud.iexapis.com/stable/stock/market/list/mostactive?collectionName=mostactive&token={IEX_NEW_TOKEN}"
+data_most = requests.get(api_most_active_tech).json()
+
+# with open('most_active_data.json', 'w') as outfile:
+#     json.dump(data_most, outfile)
+
+api_cyclical= f"https://cloud.iexapis.com/stable/stock/market/collection/sector?collectionName=&token={IEX_NEW_TOKEN}"
+data_list = requests.get(api_cyclical).json()
+
+print(data_list)
+
+with open('cyclical_data.json', 'w') as outfile:
+    json.dump(data_list, outfile)
+
+
 
 
 
