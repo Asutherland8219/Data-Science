@@ -1,0 +1,29 @@
+ [
+     {"symbol": "ATTU", "companyName": "Attunity Ltd", "primaryExchange": "NASDAQ", "sector": "Technology Services", "calculationPrice": "tops", "open": null, "openTime": null, "close": null, "closeTime": null, "high": 243900, "low": 220238, "latestPrice": 24.05, "latestSource": "IEX real time price", "latestTime": "9:59:43 AM", "latestUpdate": 1547737183382, "latestVolume": null, "iexRealtimePrice": 24.05, "iexRealtimeSize": 100, "iexLastUpdated": 1547737183382, "delayedPrice": 237133, "delayedPriceTime": 94430798, "extendedPrice": null, "extendedChange": null, "extendedChangePercent": null, "extendedPriceTime": null, "previousClose": null, "change": null, "changePercent": null, "iexMarketPercent": null, "iexVolume": 4720, "avgTotalVolume": 0, "iexBidPrice": 0, "iexBidSize": 0, "iexAskPrice": 0, "iexAskSize": 0, "marketCap": 498279155, "peRatio": null, "week52High": 243900, "week52Low": 0, "ytdChange": 0}, 
+    
+    {"symbol": "534623-IB", "companyName": "Jupiter Infomedia Ltd", "primaryExchange": "BSE LTD", "calculationPrice": "close", "open": null, "openTime": null, "openSource": "official", "close": null, "closeTime": null, "closeSource": "official", "high": 29.15, "highTime": 1606510800000, "highSource": "Close", "low": 29.15, "lowTime": 1606510800000, "lowSource": "Close", "latestPrice": 29.15, "latestSource": "Close", "latestTime": "November 27, 2020", "latestUpdate": 1606510800000, "latestVolume": 0, "iexRealtimePrice": null, "iexRealtimeSize": null, "iexLastUpdated": null, "delayedPrice": null, "delayedPriceTime": null, "oddLotDelayedPrice": null, "oddLotDelayedPriceTime": null, "extendedPrice": null, "extendedChange": null, "extendedChangePercent": null, "extendedPriceTime": null, "previousClose": 27.8, "previousVolume": null, "change": 1.35, "changePercent": 0.04856, "volume": 0, "iexMarketPercent": null, "iexVolume": null, "avgTotalVolume": 234, "iexBidPrice": null, "iexBidSize": null, "iexAskPrice": null, "iexAskSize": null, "iexOpen": null, "iexOpenTime": null, "iexClose": null, "iexCloseTime": null, "marketCap": 292083000, "peRatio": null, "week52High": 54.7, "week52Low": 20.55, "ytdChange": -0.40708900000000003, "lastTradeTime": null},
+ {
+    "symbol": "AAPL",
+    "companyName": "Apple Inc.",
+    "exchange": "NASDAQ",
+    "industry": "Telecommunications Equipment",
+    "website": "http://www.apple.com",
+    "description": "Apple, Inc. engages in the design, manufacture, and marketing of mobile communication, media devices, personal computers, and portable digital music players. It operates through the following geographical segments: Americas, Europe, Greater China, Japan, and Rest of Asia Pacific. The Americas segment includes North and South America. The Europe segment consists of European countries, as well as India, the Middle East, and Africa. The Greater China segment comprises of China, Hong Kong, and Taiwan. The Rest of Asia Pacific segment includes Australia and Asian countries. The company was founded by Steven Paul Jobs, Ronald Gerald Wayne, and Stephen G. Wozniak on April 1, 1976 and is headquartered in Cupertino, CA.",
+    "CEO": "Timothy Donald Cook",
+    "securityName": "Apple Inc.",
+    "issueType": "cs",
+    "sector": "Electronic Technology",
+    "primarySicCode": 3663,
+    "employees": 132000,
+    "tags": [
+      "Electronic Technology",
+      "Telecommunications Equipment"
+    ],
+    "address": "One Apple Park Way",
+    "address2": null,
+    "state": "CA",
+    "city": "Cupertino",
+    "zip": "95014-2083",
+    "country": "US",
+    "phone": "1.408.974.3123"
+  }]

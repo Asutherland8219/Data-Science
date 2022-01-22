@@ -1,6 +1,8 @@
+from multiprocessing.connection import answer_challenge
 from site import setcopyright
 import numpy as py
 import pandas as pd
+from pytest import skip
 import requests 
 import xlsxwriter
 import json
@@ -19,7 +21,7 @@ df_ticker = pd.DataFrame(symbol)
 
 final_dataframe = pd.DataFrame(columns = my_columns)
 batch_api_call_url = f'https://cloud.iexapis.com/stable/stock/market/batch/?types=quote&symbols={symbol}&token={IEX_NEW_TOKEN}'
-data = requests.get(batch_api_call_url).json()
+# data = requests.get(batch_api_call_url).json()
 
 # print(data)
 
@@ -86,27 +88,80 @@ primer['secondary'] = total_tags[1]
 # with open('sector_data.json', 'w') as outfile:
 #     json.dump(sector_list, outfile)
 
-api_call_tech = f"https://cloud.iexapis.com/stable/stock/market/collection/sector?collectionName=Technology&token={IEX_NEW_TOKEN}"
-tech_list = requests.get(api_call_tech).json()
+# api_call_tech = f"https://cloud.iexapis.com/stable/stock/market/collection/sector?collectionName=Technology&token={IEX_NEW_TOKEN}"
+# tech_list = requests.get(api_call_tech).json()
 
 # with open('tech_data.json', 'w') as outfile:
 #     json.dump(tech_list, outfile)
 
-api_most_active_tech = f"https://cloud.iexapis.com/stable/stock/market/list/mostactive?collectionName=mostactive&token={IEX_NEW_TOKEN}"
-data_most = requests.get(api_most_active_tech).json()
+# api_most_active_tech = f"https://cloud.iexapis.com/stable/stock/market/list/mostactive?collectionName=mostactive&token={IEX_NEW_TOKEN}"
+# data_most = requests.get(api_most_active_tech).json()
 
 # with open('most_active_data.json', 'w') as outfile:
 #     json.dump(data_most, outfile)
 
-api_cyclical= f"https://cloud.iexapis.com/stable/stock/market/collection/sector?collectionName=&token={IEX_NEW_TOKEN}"
-data_list = requests.get(api_cyclical).json()
+# api_cyclical= f"https://cloud.iexapis.com/stable/stock/market/collection/sector?collectionName=&token={IEX_NEW_TOKEN}"
+# data_list = requests.get(api_cyclical).json()
 
-print(data_list)
+# print(data_list)
 
-with open('cyclical_data.json', 'w') as outfile:
-    json.dump(data_list, outfile)
+# with open('cyclical_data.json', 'w') as outfile:
+#     json.dump(data_list, outfile)
 
 
+
+
+with open("Algo_IEX/json_loads/test_data.json", "r") as read_file:
+    techdata = json.load(read_file)
+
+
+
+''' Find Comparable Tickers '''
+def search_comp(primer, database_req):
+    tickers = []
+    
+    results_list = [] 
+    for i in database_req:
+        exchange = i.get('primaryExchange')
+        industry = i.get('industry')
+        if industry is None:
+            continue
+        else: 
+            return industry
+        
+
+    if exchange == primer['exchange']:
+        tickers.append(i['symbol'])
+            
+            
+        
+
+
+            
+    print(tickers)
+
+
+        # for keyval in database_req:
+        #     if keyval['industry'] == primer['industry']:
+        #         tickers + 1
+        #     elif keyval['sector'] == primer['sector']:
+        #         tickers + 1
+        #     elif keyval['tags'] == primer['tags']:
+        #         tickers + 1
+        #     elif keyval['primary'] == primer['primary']:
+        #         tickers + 1
+        #     if tickers >= 3:
+        #         return print(keyval['symbol'])
+        #     else:
+        #         return None
+
+
+search_comp(primer, database_req=techdata)
+
+        
+         
+            
+        
 
 
 
