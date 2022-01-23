@@ -1,5 +1,6 @@
 from multiprocessing.connection import answer_challenge
 from site import setcopyright
+from aiohttp import request
 import numpy as py
 import pandas as pd
 from pytest import skip
@@ -115,46 +116,52 @@ with open("Algo_IEX/json_loads/test_data.json", "r") as read_file:
     techdata = json.load(read_file)
 
 
+def convert(s):
+      
+    # initialization of string to ""
+    str1 = ""
+  
+    # using join function join the list s by 
+    # separating words by str1
+    return(str1.join(s))
 
+    
 ''' Find Comparable Tickers '''
 def search_comp(primer, database_req):
     tickers = []
     
-    results_list = [] 
+    ''' Taking the data from the request and parsing through, finding the keys in each set '''
     for i in database_req:
-        exchange = i.get('primaryExchange')
-        industry = i.get('industry')
-        if industry is None:
-            continue
-        else: 
-            return industry
+        response_set = []
+        i_set = i
+        response_set.append(i_set)
+        for x in response_set:
+            y = set(x)
+    
+    ''' Making a set of the primer (the request), and the response set (the api response)'''        
+    primer_set = set(primer)
+    request_set2 =(y)
+
+    ''' These are the keys that are found in the test_data set (the response) and the request sent '''
+    for name in request_set2.intersection(primer_set):
+        key_match = (list(name))
+        name_key = convert(key_match)
+        
+    for x in database_req:
+        if x.keys() == name_key:
+            print("hello")
+            
         
 
-    if exchange == primer['exchange']:
-        tickers.append(i['symbol'])
+    # if exchange == primer['exchange']:
+    #     tickers.append(i['symbol'])
             
             
         
 
 
             
-    print(tickers)
-
-
-        # for keyval in database_req:
-        #     if keyval['industry'] == primer['industry']:
-        #         tickers + 1
-        #     elif keyval['sector'] == primer['sector']:
-        #         tickers + 1
-        #     elif keyval['tags'] == primer['tags']:
-        #         tickers + 1
-        #     elif keyval['primary'] == primer['primary']:
-        #         tickers + 1
-        #     if tickers >= 3:
-        #         return print(keyval['symbol'])
-        #     else:
-        #         return None
-
+    # print(tickers)
 
 search_comp(primer, database_req=techdata)
 
